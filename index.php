@@ -75,7 +75,7 @@ session_start();
 
     if($userType == "Administrator"){
 
-      $query = "SELECT * FROM tbladmin WHERE emailAddress = '$username' AND password = '$password'";
+      $query = "SELECT * FROM dbo.tbladmin WHERE emailAddress = '$username' AND password = '$password'";
       $rs = $conn->query($query);
       $num = $rs->num_rows;
       $rows = $rs->fetch_assoc();
@@ -102,7 +102,7 @@ session_start();
     }
     else if($userType == "ClassTeacher"){
 
-      $query = "SELECT * FROM tblclassteacher WHERE emailAddress = '$username' AND password = '$password'";
+      $query = "SELECT * FROM dbo.tblclassteacher WHERE emailAddress = '$username' AND password = '$password'";
       $rs = $conn->query($query);
       $num = $rs->num_rows;
       $rows = $rs->fetch_assoc();
