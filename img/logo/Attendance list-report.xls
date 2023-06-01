@@ -1,0 +1,131 @@
+
+        <table border="1">
+        <thead>
+            <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Other Name</th>
+            <th>Admission No</th>
+            <th>Class</th>
+            <th>Class Arm</th>
+            <th>Session</th>
+            <th>Term</th>
+            <th>Status</th>
+            <th>Date</th>
+            </tr>
+        </thead>
+
+  
+<tr>  
+<td>1</td> 
+<td>Jon</td> 
+<td>Mbeeka</td> 
+<td>none</td> 
+<td>AMS110</td> 
+<td>2N</td> 
+<td>N1</td>	
+<td>2021/2022</td>	 
+<td>First</td>	
+<td>Present</td>	 	
+<td>2023-05-22</td>	 					
+</tr>  
+  
+<tr>  
+<td>2</td> 
+<td>Aida</td> 
+<td>Moraa</td> 
+<td>none</td> 
+<td>AMS133</td> 
+<td>2N</td> 
+<td>N1</td>	
+<td>2021/2022</td>	 
+<td>First</td>	
+<td>Absent</td>	 	
+<td>2023-05-22</td>	 					
+</tr>  
+  
+<tr>  
+<td>3</td> 
+<td>Miguel</td> 
+<td>Bush</td> 
+<td>none</td> 
+<td>AMS135</td> 
+<td>2N</td> 
+<td>N1</td>	
+<td>2021/2022</td>	 
+<td>First</td>	
+<td>Present</td>	 	
+<td>2023-05-22</td>	 					
+</tr>  
+  
+<tr>  
+<td>4</td> 
+<td>Sergio</td> 
+<td>Hammons</td> 
+<td>none</td> 
+<td>AMS144</td> 
+<td>2N</td> 
+<td>N1</td>	
+<td>2021/2022</td>	 
+<td>First</td>	
+<td>Present</td>	 	
+<td>2023-05-22</td>	 					
+</tr>  
+  
+<tr>  
+<td>5</td> 
+<td>Lyn</td> 
+<td>Rogers</td> 
+<td>none</td> 
+<td>AMS148</td> 
+<td>2N</td> 
+<td>N1</td>	
+<td>2021/2022</td>	 
+<td>First</td>	
+<td>Present</td>	 	
+<td>2023-05-22</td>	 					
+</tr>  
+  
+<tr>  
+<td>6</td> 
+<td>James</td> 
+<td>Dominick</td> 
+<td>none</td> 
+<td>AMS151</td> 
+<td>2N</td> 
+<td>N1</td>	
+<td>2021/2022</td>	 
+<td>First</td>	
+<td>Absent</td>	 	
+<td>2023-05-22</td>	 					
+</tr>  
+  
+<tr>  
+<td>7</td> 
+<td>Ethel</td> 
+<td>Quin</td> 
+<td>none</td> 
+<td>AMS159</td> 
+<td>2N</td> 
+<td>N1</td>	
+<td>2021/2022</td>	 
+<td>First</td>	
+<td>Present</td>	 	
+<td>2023-05-22</td>	 					
+</tr>  
+  
+<tr>  
+<td>8</td> 
+<td>Roland</td> 
+<td>Estrada</td> 
+<td>none</td> 
+<td>AMS161</td> 
+<td>2N</td> 
+<td>N1</td>	
+<td>2021/2022</td>	 
+<td>First</td>	
+<td>Absent</td>	 	
+<td>2023-05-22</td>	 					
+</tr>  
+</table>
