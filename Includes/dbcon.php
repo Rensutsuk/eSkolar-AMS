@@ -1,5 +1,5 @@
 <?php
-	$serverName = "tcp:eskolar.database.windows.net,1433";
+	$serverName = "eskolar.database.windows.net";
 	$connectionOptions = array(
 		"Database" => "eSkolar-AMS",
 		"Uid" => "Rensutsuki",
@@ -10,7 +10,7 @@
 	
 	if ($conn === false) {
 		die(print_r(sqlsrv_errors(), true));
+	} else {
+		echo "Connected to SQL Server successfully!";
 	}
-	
-	// Perform database operations using $conn
 ?>
