@@ -32,7 +32,7 @@ session_start();
             <div class="row">
               <div class="col-lg-12">
                 <div class="login-form">
-                <h5 align="center" style="color:maroon">eSKOLAR Attendance</h5>
+                <h5 align="center">STUDENT ATTENDANCE SYSTEM</h5>
                   <div class="text-center">
                     <img src="img/logo/attnlg.jpg" style="width:100px;height:100px">
                     <br><br>
@@ -75,7 +75,7 @@ session_start();
 
     if($userType == "Administrator"){
 
-      $query = "SELECT * FROM dbo.tbladmin WHERE emailAddress = '$username' AND password = '$password'";
+      $query = "SELECT * FROM tbladmin WHERE emailAddress = '$username' AND password = '$password'";
       $rs = $conn->query($query);
       $num = $rs->num_rows;
       $rows = $rs->fetch_assoc();
@@ -102,7 +102,7 @@ session_start();
     }
     else if($userType == "ClassTeacher"){
 
-      $query = "SELECT * FROM dbo.tblclassteacher WHERE emailAddress = '$username' AND password = '$password'";
+      $query = "SELECT * FROM tblclassteacher WHERE emailAddress = '$username' AND password = '$password'";
       $rs = $conn->query($query);
       $num = $rs->num_rows;
       $rows = $rs->fetch_assoc();
@@ -138,6 +138,16 @@ session_start();
     }
 }
 ?>
+
+                    <!-- <hr>
+                    <a href="index.html" class="btn btn-google btn-block">
+                      <i class="fab fa-google fa-fw"></i> Login with Google
+                    </a>
+                    <a href="index.html" class="btn btn-facebook btn-block">
+                      <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                    </a> -->
+
+                
                   <div class="text-center">
                   </div>
                 </div>
