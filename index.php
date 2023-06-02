@@ -84,12 +84,11 @@ if (isset($_POST['login'])) {
       $_SESSION['lastName'] = $rows['lastName'];
       $_SESSION['emailAddress'] = $rows['emailAddress'];
 
-      echo $query = "SELECT * FROM tbladmin WHERE emailAddress = '$username' AND password = '$password'";
       // Disable output buffering
-      // ob_end_clean();
+      ob_end_clean();
 
-      // header("Location: Admin/index.php");
-      // exit();
+      header("Location: Admin/index.php");
+      exit();
     } else {
       echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
     }
