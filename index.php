@@ -86,10 +86,9 @@ session_start();
         $_SESSION['firstName'] = $rows['firstName'];
         $_SESSION['lastName'] = $rows['lastName'];
         $_SESSION['emailAddress'] = $rows['emailAddress'];
-        echo "Login Successful";
-        echo "<script type = \"text/javascript\">
-        window.location = (\"Admin/index.php\")
-        </script>";
+        
+        header("Location: Admin/index.php");
+        exit();
       }
 
       else{
@@ -116,9 +115,8 @@ session_start();
         $_SESSION['classId'] = $rows['classId'];
         $_SESSION['classArmId'] = $rows['classArmId'];
 
-        echo "<script type = \"text/javascript\">
-        window.location = (\"ClassTeacher/index.php\")
-        </script>";
+        header("Location: ClassTeacher/index.php");
+        exit();
       }
 
       else{
