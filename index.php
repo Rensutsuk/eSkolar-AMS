@@ -79,26 +79,29 @@ error_reporting(E_ALL);
 
                     if ($userType == "Administrator") {
 
-                      $query = "SELECT * FROM tbladmin WHERE emailAddress = '$username' AND password = '$password'";
-                      $rs = $conn->query($query);
-                      $num = $rs->num_rows;
-                      $rows = $rs->fetch_assoc();
+                      $query = "SELECT * FROM dbo.tbladmin WHERE emailAddress = '$username' AND password = '$password'";
+                      $result = sqlsrv_query($conn, $query);
+                      if ($result === false) {
+                        die(print_r(sqlsrv_errors(), true));
+                      }
+
+                      $num = sqlsrv_num_rows($result);
+                      $rows = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
                       if ($num > 0) {
-
                         $_SESSION['userId'] = $rows['Id'];
                         $_SESSION['firstName'] = $rows['firstName'];
                         $_SESSION['lastName'] = $rows['lastName'];
                         $_SESSION['emailAddress'] = $rows['emailAddress'];
 
                         echo "<script type = \"text/javascript\">
-      window.location = (\"Admin/index.php\")
-      </script>";
+                              window.location = (\"Admin/index.php\")
+                              </script>";
                       } else {
 
                         echo "<div class='alert alert-danger' role='alert'>
-      Invalid Username/Password!
-      </div>";
+                              Invalid Username/Password!
+                              </div>";
 
                       }
                     } else if ($userType == "ClassTeacher") {
