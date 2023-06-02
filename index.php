@@ -77,46 +77,58 @@ if (isset($_POST['login'])) {
 
   if ($userType == "Administrator") {
     $query = "SELECT * FROM dbo.tbladmin WHERE emailAddress = '$username' AND password = '$password'";
-    $rs = $conn->query($query);
-    $num = $rs->num_rows;
-    $rows = $rs->fetch_assoc();
+    $result = sqlsrv_query($conn, $query);
+    if ($result === false) {
+        die(print_r(sqlsrv_errors(), true));
+    }
+
+    $num = sqlsrv_num_rows($result);
+    $rows = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
     if ($num > 0) {
-      $_SESSION['userId'] = $rows['Id'];
-      $_SESSION['firstName'] = $rows['firstName'];
-      $_SESSION['lastName'] = $rows['lastName'];
-      $_SESSION['emailAddress'] = $rows['emailAddress'];
+        $_SESSION['userId'] = $rows['Id'];
+        $_SESSION['firstName'] = $rows['firstName'];
+        $_SESSION['lastName'] = $rows['lastName'];
+        $_SESSION['emailAddress'] = $rows['emailAddress'];
 
-      // Disable output buffering
-      ob_end_clean();
+        // Disable output buffering
+        ob_end_clean();
 
-      header("Location: Admin/index.php");
-      exit();
+        header("Location: Admin/index.php");
+        exit();
     } else {
-      echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
+        echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
     }
+
+    sqlsrv_free_stmt($result);
+
   } else if ($userType == "ClassTeacher") {
     $query = "SELECT * FROM dbo.tblclassteacher WHERE emailAddress = '$username' AND password = '$password'";
-    $rs = $conn->query($query);
-    $num = $rs->num_rows;
-    $rows = $rs->fetch_assoc();
+    $result = sqlsrv_query($conn, $query);
+    if ($result === false) {
+        die(print_r(sqlsrv_errors(), true));
+    }
+
+    $num = sqlsrv_num_rows($result);
+    $rows = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
     if ($num > 0) {
-      $_SESSION['userId'] = $rows['Id'];
-      $_SESSION['firstName'] = $rows['firstName'];
-      $_SESSION['lastName'] = $rows['lastName'];
-      $_SESSION['emailAddress'] = $rows['emailAddress'];
-      $_SESSION['classId'] = $rows['classId'];
-      $_SESSION['classArmId'] = $rows['classArmId'];
+        $_SESSION['userId'] = $rows['Id'];
+        $_SESSION['firstName'] = $rows['firstName'];
+        $_SESSION['lastName'] = $rows['lastName'];
+        $_SESSION['emailAddress'] = $rows['emailAddress'];
+        $_SESSION['classId'] = $rows['classId'];
+        $_SESSION['classArmId'] = $rows['classArmId'];
 
-      // Disable output buffering
-      ob_end_clean();
+        // Disable output buffering
+        ob_end_clean();
 
-      header("Location: ClassTeacher/index.php");
-      exit();
+        header("Location: ClassTeacher/index.php");
+        exit();
     } else {
-      echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
+        echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
     }
+    sqlsrv_free_stmt($result);
   } else {
     echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
   }
