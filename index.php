@@ -99,6 +99,7 @@ error_reporting(E_ALL);
                       // Display username and password for debugging
                       echo "Username: " . $username . "<br>";
                       echo "Password: " . $passwordHash . "<br><br>";
+                      echo "Password: " . $password . "<br><br>";
 
                       if ($num > 0) {
                         $_SESSION['userId'] = $rows['Id'];
