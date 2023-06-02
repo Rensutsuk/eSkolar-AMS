@@ -74,7 +74,7 @@ error_reporting(E_ALL);
                     $userType = $_POST['userType'];
                     $username = $_POST['username'];
                     $password = $_POST['password'];
-                    $passwordHash = "D00F5D5217896FB7FD601412CB890830"; // Hash the password for comparison
+                    $passwordHash = md5($password); // Hash the password for comparison
                   
                     // Prepare the SQL statement with parameters to prevent SQL injection
                     if ($userType == "Administrator") {
@@ -95,6 +95,10 @@ error_reporting(E_ALL);
                     if (sqlsrv_execute($stmt)) {
                       $rows = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
                       $num = sqlsrv_num_rows($stmt);
+
+                      // Display username and password for debugging
+                      echo "Username: " . $username . "<br>";
+                      echo "Password: " . $passwordHash . "<br><br>";
 
                       if ($num > 0) {
                         $_SESSION['userId'] = $rows['Id'];
@@ -117,8 +121,6 @@ error_reporting(E_ALL);
                       die(print_r(sqlsrv_errors(), true));
                     }
                   }
-
-
                   ?>
 
                   <!-- <hr>
