@@ -86,7 +86,7 @@ session_start();
         $_SESSION['firstName'] = $rows['firstName'];
         $_SESSION['lastName'] = $rows['lastName'];
         $_SESSION['emailAddress'] = $rows['emailAddress'];
-
+        echo "Login Successful";
         echo "<script type = \"text/javascript\">
         window.location = (\"Admin/index.php\")
         </script>";
