@@ -76,7 +76,7 @@ if (isset($_POST['login'])) {
   $password = md5($password);
 
   if ($userType == "Administrator") {
-    $query = "SELECT * FROM dbo.tbladmin WHERE emailAddress = '$username' AND password = '$password'";
+    $query = "SELECT * FROM tbladmin WHERE emailAddress = '$username' AND password = '$password'";
     $result = sqlsrv_query($conn, $query);
     if ($result === false) {
         die(print_r(sqlsrv_errors(), true));
