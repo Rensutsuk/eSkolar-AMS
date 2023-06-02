@@ -2,9 +2,6 @@
 <?php 
 include 'Includes/dbcon.php';
 session_start();
-
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
 ?>
 
 <!DOCTYPE html>
@@ -76,63 +73,56 @@ if (isset($_POST['login'])) {
   $password = md5($password);
 
   if ($userType == "Administrator") {
-    $query = "SELECT * FROM tbladmin WHERE emailAddress = '$username' AND password = '$password'";
-    $result = sqlsrv_query($conn, $query);
-    if ($result === false) {
-        die(print_r(sqlsrv_errors(), true));
-    }
+      $query = "SELECT * FROM tbladmin WHERE emailAddress = '$username' AND password = '$password'";
+      $result = sqlsrv_query($conn, $query);
+      if ($result === false) {
+          die(print_r(sqlsrv_errors(), true));
+      }
 
-    $num = sqlsrv_num_rows($result);
-    $rows = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+      $num = sqlsrv_num_rows($result);
+      $rows = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
-    if ($num > 0) {
-        $_SESSION['userId'] = $rows['Id'];
-        $_SESSION['firstName'] = $rows['firstName'];
-        $_SESSION['lastName'] = $rows['lastName'];
-        $_SESSION['emailAddress'] = $rows['emailAddress'];
-
-        // Disable output buffering
-        ob_end_clean();
-
-        header("Location: Admin/index.php");
-        exit();
-    } else {
-        echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
-    }
-
-    sqlsrv_free_stmt($result);
-
+      if ($num > 0) {
+          $_SESSION['userId'] = $rows['Id'];
+          $_SESSION['firstName'] = $rows['firstName'];
+          $_SESSION['lastName'] = $rows['lastName'];
+          $_SESSION['emailAddress'] = $rows['emailAddress'];
+          echo "Login Successful";
+          echo "<script type=\"text/javascript\">
+          window.location = (\"Admin/index.php\")
+          </script>";
+      } else {
+          echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
+      }
   } else if ($userType == "ClassTeacher") {
-    $query = "SELECT * FROM dbo.tblclassteacher WHERE emailAddress = '$username' AND password = '$password'";
-    $result = sqlsrv_query($conn, $query);
-    if ($result === false) {
-        die(print_r(sqlsrv_errors(), true));
-    }
+      $query = "SELECT * FROM tblclassteacher WHERE emailAddress = '$username' AND password = '$password'";
+      $result = sqlsrv_query($conn, $query);
+      if ($result === false) {
+          die(print_r(sqlsrv_errors(), true));
+      }
 
-    $num = sqlsrv_num_rows($result);
-    $rows = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+      $num = sqlsrv_num_rows($result);
+      $rows = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
-    if ($num > 0) {
-        $_SESSION['userId'] = $rows['Id'];
-        $_SESSION['firstName'] = $rows['firstName'];
-        $_SESSION['lastName'] = $rows['lastName'];
-        $_SESSION['emailAddress'] = $rows['emailAddress'];
-        $_SESSION['classId'] = $rows['classId'];
-        $_SESSION['classArmId'] = $rows['classArmId'];
+      if ($num > 0) {
+          $_SESSION['userId'] = $rows['Id'];
+          $_SESSION['firstName'] = $rows['firstName'];
+          $_SESSION['lastName'] = $rows['lastName'];
+          $_SESSION['emailAddress'] = $rows['emailAddress'];
+          $_SESSION['classId'] = $rows['classId'];
+          $_SESSION['classArmId'] = $rows['classArmId'];
 
-        // Disable output buffering
-        ob_end_clean();
-
-        header("Location: ClassTeacher/index.php");
-        exit();
-    } else {
-        echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
-    }
-    sqlsrv_free_stmt($result);
+          echo "<script type=\"text/javascript\">
+          window.location = (\"ClassTeacher/index.php\")
+          </script>";
+      } else {
+          echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
+      }
   } else {
-    echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
+      echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
   }
 }
+
 ?>
 
                     <!-- <hr>
