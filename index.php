@@ -96,10 +96,10 @@ error_reporting(E_ALL);
                       $rows = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
                       $num = sqlsrv_num_rows($stmt);
 
-                      // Display username and password for debugging
+                      // Display username, query password, and input password for comparison
                       echo "Username: " . $username . "<br>";
-                      echo "Password: " . $passwordHash . "<br><br>";
-                      echo "Password: " . $password . "<br><br>";
+                      echo "Query Password: " . $rows['password'] . "<br>";
+                      echo "Input Password: " . $passwordHash . "<br><br>";
 
                       if ($num > 0) {
                         $_SESSION['userId'] = $rows['Id'];
