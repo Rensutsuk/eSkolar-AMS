@@ -71,73 +71,53 @@ error_reporting(E_ALL);
                   <?php
 
                   if (isset($_POST['login'])) {
-
                     $userType = $_POST['userType'];
                     $username = $_POST['username'];
                     $password = $_POST['password'];
-                    $password = md5($password);
-
+                    $passwordHash = md5($password); // Hash the password for comparison
+                  
+                    // Prepare the SQL statement with parameters to prevent SQL injection
                     if ($userType == "Administrator") {
-
-                      $query = "SELECT * FROM dbo.tbladmin WHERE emailAddress = '$username' AND password = '$password'";
-                      $result = sqlsrv_query($conn, $query);
-                      if ($result === false) {
-                        die(print_r(sqlsrv_errors(), true));
-                      }
-
-                      $num = sqlsrv_num_rows($result);
-                      $rows = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
-
-                      if ($num > 0) {
-                        $_SESSION['userId'] = $rows['Id'];
-                        $_SESSION['firstName'] = $rows['firstName'];
-                        $_SESSION['lastName'] = $rows['lastName'];
-                        $_SESSION['emailAddress'] = $rows['emailAddress'];
-
-                        echo "<script type = \"text/javascript\">
-                              window.location = (\"Admin/index.php\")
-                              </script>";
-                      } else {
-
-                        echo "<div class='alert alert-danger' role='alert'>
-                              Invalid Username/Password!
-                              </div>";
-
-                      }
+                      $query = "SELECT * FROM dbo.tbladmin WHERE emailAddress = ? AND password = ?";
                     } else if ($userType == "ClassTeacher") {
+                      $query = "SELECT * FROM dbo.tblclassteacher WHERE emailAddress = ? AND password = ?";
+                    } else {
+                      echo "<div class='alert alert-danger' role='alert'>Invalid User Type!</div>";
+                      exit();
+                    }
 
-                      $query = "SELECT * FROM tblclassteacher WHERE emailAddress = '$username' AND password = '$password'";
-                      $rs = $conn->query($query);
-                      $num = $rs->num_rows;
-                      $rows = $rs->fetch_assoc();
+                    // Prepare and execute the query
+                    $stmt = sqlsrv_prepare($conn, $query, array(&$username, &$passwordHash));
+                    if (!$stmt) {
+                      die(print_r(sqlsrv_errors(), true));
+                    }
+
+                    if (sqlsrv_execute($stmt)) {
+                      $rows = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+                      $num = sqlsrv_num_rows($stmt);
 
                       if ($num > 0) {
-
                         $_SESSION['userId'] = $rows['Id'];
                         $_SESSION['firstName'] = $rows['firstName'];
                         $_SESSION['lastName'] = $rows['lastName'];
                         $_SESSION['emailAddress'] = $rows['emailAddress'];
-                        $_SESSION['classId'] = $rows['classId'];
-                        $_SESSION['classArmId'] = $rows['classArmId'];
 
-                        echo "<script type = \"text/javascript\">
-      window.location = (\"ClassTeacher/index.php\")
-      </script>";
+                        if ($userType == "Administrator") {
+                          header("Location: Admin/index.php");
+                        } else if ($userType == "ClassTeacher") {
+                          $_SESSION['classId'] = $rows['classId'];
+                          $_SESSION['classArmId'] = $rows['classArmId'];
+                          header("Location: ClassTeacher/index.php");
+                        }
+                        exit();
                       } else {
-
-                        echo "<div class='alert alert-danger' role='alert'>
-      Invalid Username/Password!
-      </div>";
-
+                        echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
                       }
                     } else {
-
-                      echo "<div class='alert alert-danger' role='alert'>
-      Invalid Username/Password!
-      </div>";
-
+                      die(print_r(sqlsrv_errors(), true));
                     }
                   }
+
 
                   ?>
 
