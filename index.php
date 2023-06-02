@@ -66,74 +66,57 @@ session_start();
 
 <?php
 
-  if(isset($_POST['login'])){
+if (isset($_POST['login'])) {
+  $userType = $_POST['userType'];
+  $username = $_POST['username'];
+  $password = $_POST['password'];
+  $password = md5($password);
 
-    $userType = $_POST['userType'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $password = md5($password);
+  if ($userType == "Administrator") {
+    $query = "SELECT * FROM tbladmin WHERE emailAddress = '$username' AND password = '$password'";
+    $rs = $conn->query($query);
+    $num = $rs->num_rows;
+    $rows = $rs->fetch_assoc();
 
-    if($userType == "Administrator"){
+    if ($num > 0) {
+      $_SESSION['userId'] = $rows['Id'];
+      $_SESSION['firstName'] = $rows['firstName'];
+      $_SESSION['lastName'] = $rows['lastName'];
+      $_SESSION['emailAddress'] = $rows['emailAddress'];
 
-      $query = "SELECT * FROM tbladmin WHERE emailAddress = '$username' AND password = '$password'";
-      $rs = $conn->query($query);
-      $num = $rs->num_rows;
-      $rows = $rs->fetch_assoc();
+      // Disable output buffering
+      ob_end_clean();
 
-      if($num > 0){
-
-        $_SESSION['userId'] = $rows['Id'];
-        $_SESSION['firstName'] = $rows['firstName'];
-        $_SESSION['lastName'] = $rows['lastName'];
-        $_SESSION['emailAddress'] = $rows['emailAddress'];
-        
-        header("Location: Admin/index.php");
-        exit();
-      }
-
-      else{
-
-        echo "<div class='alert alert-danger' role='alert'>
-        Invalid Username/Password!
-        </div>";
-
-      }
+      header("Location: Admin/index.php");
+      exit();
+    } else {
+      echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
     }
-    else if($userType == "ClassTeacher"){
+  } else if ($userType == "ClassTeacher") {
+    $query = "SELECT * FROM tblclassteacher WHERE emailAddress = '$username' AND password = '$password'";
+    $rs = $conn->query($query);
+    $num = $rs->num_rows;
+    $rows = $rs->fetch_assoc();
 
-      $query = "SELECT * FROM tblclassteacher WHERE emailAddress = '$username' AND password = '$password'";
-      $rs = $conn->query($query);
-      $num = $rs->num_rows;
-      $rows = $rs->fetch_assoc();
+    if ($num > 0) {
+      $_SESSION['userId'] = $rows['Id'];
+      $_SESSION['firstName'] = $rows['firstName'];
+      $_SESSION['lastName'] = $rows['lastName'];
+      $_SESSION['emailAddress'] = $rows['emailAddress'];
+      $_SESSION['classId'] = $rows['classId'];
+      $_SESSION['classArmId'] = $rows['classArmId'];
 
-      if($num > 0){
+      // Disable output buffering
+      ob_end_clean();
 
-        $_SESSION['userId'] = $rows['Id'];
-        $_SESSION['firstName'] = $rows['firstName'];
-        $_SESSION['lastName'] = $rows['lastName'];
-        $_SESSION['emailAddress'] = $rows['emailAddress'];
-        $_SESSION['classId'] = $rows['classId'];
-        $_SESSION['classArmId'] = $rows['classArmId'];
-
-        header("Location: ClassTeacher/index.php");
-        exit();
-      }
-
-      else{
-
-        echo "<div class='alert alert-danger' role='alert'>
-        Invalid Username/Password!
-        </div>";
-
-      }
+      header("Location: ClassTeacher/index.php");
+      exit();
+    } else {
+      echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
     }
-    else{
-
-        echo "<div class='alert alert-danger' role='alert'>
-        Invalid Username/Password!
-        </div>";
-
-    }
+  } else {
+    echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
+  }
 }
 ?>
 
