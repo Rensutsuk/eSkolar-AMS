@@ -56,7 +56,7 @@ include '../Includes/session.php';
           <div class="row mb-3">
           <!-- Students Card -->
           <?php 
-$query1=mysqli_query($conn,"SELECT * from tblstudents");                       
+$query1=mysqli_query($conn,"SELECT * from dbo.tblstudents");                       
 $students = mysqli_num_rows($query1);
 ?>
             <div class="col-xl-3 col-md-6 mb-4">
@@ -80,7 +80,7 @@ $students = mysqli_num_rows($query1);
             </div>
             <!-- Class Card -->
              <?php 
-$query1=mysqli_query($conn,"SELECT * from tblclass");                       
+$query1=mysqli_query($conn,"SELECT * from dbo.tblclass");                       
 $class = mysqli_num_rows($query1);
 ?>
             <div class="col-xl-3 col-md-6 mb-4">
@@ -104,7 +104,7 @@ $class = mysqli_num_rows($query1);
             </div>
             <!-- Class Arm Card -->
              <?php 
-$query1=mysqli_query($conn,"SELECT * from tblclassarms");                       
+$query1=mysqli_query($conn,"SELECT * from dbo.tblclassarms");                       
 $classArms = mysqli_num_rows($query1);
 ?>
             <div class="col-xl-3 col-md-6 mb-4">
@@ -129,7 +129,7 @@ $classArms = mysqli_num_rows($query1);
             
             <!-- Std Att Card  -->
             <?php 
-$query1=mysqli_query($conn,"SELECT * from tblattendance");                       
+$query1=mysqli_query($conn,"SELECT * from dbo.tblattendance");                       
 $totAttendance = mysqli_num_rows($query1);
 ?>
             <div class="col-xl-3 col-md-6 mb-4">
@@ -154,7 +154,7 @@ $totAttendance = mysqli_num_rows($query1);
 
             <!-- Teachers Card  -->
             <?php 
-            $query1=mysqli_query($conn,"SELECT * from tblclassteacher");                       
+            $query1=mysqli_query($conn,"SELECT * from dbo.tblclassteacher");                       
             $classTeacher = mysqli_num_rows($query1);
             ?>
                         <div class="col-xl-3 col-md-6 mb-4">
@@ -180,7 +180,7 @@ $totAttendance = mysqli_num_rows($query1);
 
                          <!-- Session and Terms Card  -->
             <?php 
-            $query1=mysqli_query($conn,"SELECT * from tblsessionterm");                       
+            $query1=mysqli_query($conn,"SELECT * from dbo.tblsessionterm");                       
             $sessTerm = mysqli_num_rows($query1);
             ?>
                         <div class="col-xl-3 col-md-6 mb-4">
@@ -206,7 +206,7 @@ $totAttendance = mysqli_num_rows($query1);
 
                         <!-- Terms Card  -->
             <?php 
-            $query1=mysqli_query($conn,"SELECT * from tblterm");                       
+            $query1=mysqli_query($conn,"SELECT * from dbo.tblterm");                       
             $termonly = mysqli_num_rows($query1);
             ?>
                         <div class="col-xl-3 col-md-6 mb-4">
