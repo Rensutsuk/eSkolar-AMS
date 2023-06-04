@@ -1,9 +1,7 @@
-<?php
+
+<?php 
 include 'Includes/dbcon.php';
 session_start();
-
-ini_set('display_errors', '1');
-error_reporting(E_ALL);
 ?>
 
 <!DOCTYPE html>
@@ -34,27 +32,25 @@ error_reporting(E_ALL);
             <div class="row">
               <div class="col-lg-12">
                 <div class="login-form">
-                  <h5 align="center">STUDENT ATTENDANCE SYSTEM</h5>
+                <h5 align="center">STUDENT ATTENDANCE SYSTEM</h5>
                   <div class="text-center">
                     <img src="img/logo/attnlg.jpg" style="width:100px;height:100px">
                     <br><br>
-                    <h1 class="h4 text-gray-900 mb-4">Login Panel</h1>
+                    <h1 class="h4 text-gray-900 mb-4">Admin Login Panel</h1>
                   </div>
                   <form class="user" method="Post" action="">
-                    <div class="form-group">
-                      <select required name="userType" class="form-control mb-3">
-                        <option value="">--Select User Roles--</option>
-                        <option value="Administrator">Administrator</option>
-                        <option value="ClassTeacher">ClassTeacher</option>
-                      </select>
+                  <div class="form-group">
+                  <select required name="userType" class="form-control mb-3">
+                          <option value="">--Select User Roles--</option>
+                          <option value="Administrator">Administrator</option>
+                          <option value="ClassTeacher">ClassTeacher</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                      <input type="text" class="form-control" required name="username" id="exampleInputEmail"
-                        placeholder="Enter Email Address">
+                      <input type="text" class="form-control" required name="username" id="exampleInputEmail" placeholder="Enter Email Address">
                     </div>
                     <div class="form-group">
-                      <input type="password" name="password" required class="form-control" id="exampleInputPassword"
-                        placeholder="Enter Password">
+                      <input type="password" name = "password" required class="form-control" id="exampleInputPassword" placeholder="Enter Password">
                     </div>
                     <div class="form-group">
                       <div class="custom-control custom-checkbox small" style="line-height: 1.5rem;">
@@ -64,67 +60,86 @@ error_reporting(E_ALL);
                       </div>
                     </div>
                     <div class="form-group">
-                      <input type="submit" class="btn btn-success btn-block" value="Login" name="login" />
+                        <input type="submit"  class="btn btn-success btn-block" value="Login" name="login" />
                     </div>
-                  </form>
+                     </form>
 
-                  <?php
+<?php
 
-                  if (isset($_POST['login'])) {
-                    $userType = $_POST['userType'];
-                    $username = $_POST['username'];
-                    $password = $_POST['password'];
-                    $passwordHash = md5($password); // Hash the password for comparison
-                  
-                    // Prepare the SQL statement with parameters to prevent SQL injection
-                    if ($userType == "Administrator") {
-                      $query = "SELECT * FROM dbo.tbladmin WHERE emailAddress = ? AND password = ?";
-                    } else if ($userType == "ClassTeacher") {
-                      $query = "SELECT * FROM dbo.tblclassteacher WHERE emailAddress = ? AND password = ?";
-                    } else {
-                      echo "<div class='alert alert-danger' role='alert'>Invalid User Type!</div>";
-                      exit();
-                    }
+  if(isset($_POST['login'])){
 
-                    // Prepare and execute the query
-                    $stmt = sqlsrv_prepare($conn, $query, array(&$username, &$passwordHash));
-                    if (!$stmt) {
-                      die(print_r(sqlsrv_errors(), true));
-                    }
+    $userType = $_POST['userType'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $password = md5($password);
 
-                    if (sqlsrv_execute($stmt)) {
-                      $rows = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
-                      $num = sqlsrv_num_rows($stmt);
+    if($userType == "Administrator"){
 
-                      // Display username, query password, and input password for comparison
-                      echo "Username: " . $username . "<br>";
-                      echo "Query Password: " . $rows['password'] . "<br>";
-                      echo "Input Password: " . $passwordHash . "<br><br>";
+      $query = "SELECT * FROM tbladmin WHERE emailAddress = '$username' AND password = '$password'";
+      $rs = $conn->query($query);
+      $num = $rs->num_rows;
+      $rows = $rs->fetch_assoc();
 
-                      if ($num > 0) {
-                        $_SESSION['userId'] = $rows['Id'];
-                        $_SESSION['firstName'] = $rows['firstName'];
-                        $_SESSION['lastName'] = $rows['lastName'];
-                        $_SESSION['emailAddress'] = $rows['emailAddress'];
+      if($num > 0){
 
-                        if ($userType == "Administrator") {
-                          header("Location: Admin/index.php");
-                        } else if ($userType == "ClassTeacher") {
-                          $_SESSION['classId'] = $rows['classId'];
-                          $_SESSION['classArmId'] = $rows['classArmId'];
-                          header("Location: ClassTeacher/index.php");
-                        }
-                        exit();
-                      } else {
-                        echo "<div class='alert alert-danger' role='alert'>Invalid Username/Password!</div>";
-                      }
-                    } else {
-                      die(print_r(sqlsrv_errors(), true));
-                    }
-                  }
-                  ?>
+        $_SESSION['userId'] = $rows['Id'];
+        $_SESSION['firstName'] = $rows['firstName'];
+        $_SESSION['lastName'] = $rows['lastName'];
+        $_SESSION['emailAddress'] = $rows['emailAddress'];
 
-                  <!-- <hr>
+        echo "<script type = \"text/javascript\">
+        window.location = (\"Admin/index.php\")
+        </script>";
+      }
+
+      else{
+
+        echo "<div class='alert alert-danger' role='alert'>
+        Invalid Username/Password!
+        </div>";
+
+      }
+    }
+    else if($userType == "ClassTeacher"){
+
+      $query = "SELECT * FROM tblclassteacher WHERE emailAddress = '$username' AND password = '$password'";
+      $rs = $conn->query($query);
+      $num = $rs->num_rows;
+      $rows = $rs->fetch_assoc();
+
+      if($num > 0){
+
+        $_SESSION['userId'] = $rows['Id'];
+        $_SESSION['firstName'] = $rows['firstName'];
+        $_SESSION['lastName'] = $rows['lastName'];
+        $_SESSION['emailAddress'] = $rows['emailAddress'];
+        $_SESSION['classId'] = $rows['classId'];
+        $_SESSION['classArmId'] = $rows['classArmId'];
+
+        echo "<script type = \"text/javascript\">
+        window.location = (\"ClassTeacher/index.php\")
+        </script>";
+      }
+
+      else{
+
+        echo "<div class='alert alert-danger' role='alert'>
+        Invalid Username/Password!
+        </div>";
+
+      }
+    }
+    else{
+
+        echo "<div class='alert alert-danger' role='alert'>
+        Invalid Username/Password!
+        </div>";
+
+    }
+}
+?>
+
+                    <!-- <hr>
                     <a href="index.html" class="btn btn-google btn-block">
                       <i class="fab fa-google fa-fw"></i> Login with Google
                     </a>
@@ -132,7 +147,7 @@ error_reporting(E_ALL);
                       <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
                     </a> -->
 
-
+                
                   <div class="text-center">
                   </div>
                 </div>
