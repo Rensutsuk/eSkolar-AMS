@@ -34,9 +34,6 @@ $rrw = $rs->fetch_assoc();
 
 <body id="page-top">
   <div id="wrapper">
-    <!-- Sidebar -->
-    <?php include "Includes/sidebar.php"; ?>
-    <!-- Sidebar -->
     <div id="content-wrapper" class="d-flex flex-column">
       <div id="content">
         <!-- TopBar -->
