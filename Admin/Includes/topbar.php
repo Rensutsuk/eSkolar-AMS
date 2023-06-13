@@ -18,10 +18,19 @@ $fullName = $rows['firstName'] . " " . $rows['lastName'];
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="createStudents.php">Students</a>
+          <a class="nav-link text-white" href="createStudents.php">Students</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="createClassTeacher.php">Teachers</a>
+          <a class="nav-link text-white" href="createClassTeacher.php">Teachers</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="createClass.php">Class</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="createClassArms.php">Subject</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="createSessionTerm.php">Term</a>
         </li>
       </ul>
     </div>

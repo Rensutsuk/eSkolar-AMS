@@ -172,81 +172,10 @@ if (isset($_GET['Id']) && isset($_GET['classArmId']) && isset($_GET['action']) &
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Create Class Teachers</h1>
           </div>
-
           <div class="row">
             <div class="col-lg-12">
               <!-- Form Basic -->
-              <div class="card mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Create Class Teachers</h6>
-                  <?php echo $statusMsg; ?>
-                </div>
-                <div class="card-body">
-                  <form method="post">
-                    <div class="form-group row mb-3">
-                      <div class="col-xl-6">
-                        <label class="form-control-label">Firstname<span class="text-danger ml-2">*</span></label>
-                        <input type="text" class="form-control" required name="firstName"
-                          value="<?php echo $row['firstName']; ?>" id="exampleInputFirstName">
-                      </div>
-                      <div class="col-xl-6">
-                        <label class="form-control-label">Lastname<span class="text-danger ml-2">*</span></label>
-                        <input type="text" class="form-control" required name="lastName"
-                          value="<?php echo $row['lastName']; ?>" id="exampleInputFirstName">
-                      </div>
-                    </div>
-                    <div class="form-group row mb-3">
-                      <div class="col-xl-6">
-                        <label class="form-control-label">Email Address<span class="text-danger ml-2">*</span></label>
-                        <input type="email" class="form-control" required name="emailAddress"
-                          value="<?php echo $row['emailAddress']; ?>" id="exampleInputFirstName">
-                      </div>
-                      <div class="col-xl-6">
-                        <label class="form-control-label">Phone No<span class="text-danger ml-2">*</span></label>
-                        <input type="text" class="form-control" name="phoneNo" value="<?php echo $row['phoneNo']; ?>"
-                          id="exampleInputFirstName">
-                      </div>
-                    </div>
-                    <div class="form-group row mb-3">
-                      <div class="col-xl-6">
-                        <label class="form-control-label">Select Class<span class="text-danger ml-2">*</span></label>
-                        <?php
-                        $qry = "SELECT * FROM tblclass ORDER BY className ASC";
-                        $result = $conn->query($qry);
-                        $num = $result->num_rows;
-                        if ($num > 0) {
-                          echo ' <select required name="classId" onchange="classArmDropdown(this.value)" class="form-control mb-3">';
-                          echo '<option value="">--Select Class--</option>';
-                          while ($rows = $result->fetch_assoc()) {
-                            echo '<option value="' . $rows['Id'] . '" >' . $rows['className'] . '</option>';
-                          }
-                          echo '</select>';
-                        }
-                        ?>
-                      </div>
-                      <div class="col-xl-6">
-                        <label class="form-control-label">Class Arm<span class="text-danger ml-2">*</span></label>
-                        <?php
-                        echo "<div id='txtHint'></div>";
-                        ?>
-                      </div>
-                    </div>
-                    <?php
-                    if (isset($Id)) {
-                      ?>
-                      <button type="submit" name="update" class="btn btn-warning">Update</button>
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <?php
-                    } else {
-                      ?>
-                      <button type="submit" name="save" class="btn btn-primary">Save</button>
-                      <?php
-                    }
-                    ?>
-                  </form>
-                </div>
-              </div>
-
+              <?php include "Includes/addTeacher.php"; ?>
               <!-- Input Group -->
               <div class="row">
                 <div class="col-lg-12">

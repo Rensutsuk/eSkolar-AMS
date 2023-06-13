@@ -157,10 +157,6 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
         <div class="container-fluid" id="container-wrapper">
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Create Students</h1>
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Home</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Create Students</li>
-            </ol>
           </div>
 
           <div class="row">
@@ -176,8 +172,8 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                     <div class="form-group row mb-3">
                       <div class="col-xl-6">
                         <label class="form-control-label">Firstname<span class="text-danger ml-2">*</span></label>
-                        <input type="text" class="form-control" name="firstName" value="<?php echo $row['firstName']; ?>"
-                          id="exampleInputFirstName">
+                        <input type="text" class="form-control" name="firstName"
+                          value="<?php echo $row['firstName']; ?>" id="exampleInputFirstName">
                       </div>
                       <div class="col-xl-6">
                         <label class="form-control-label">Lastname<span class="text-danger ml-2">*</span></label>
@@ -188,8 +184,8 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                     <div class="form-group row mb-3">
                       <div class="col-xl-6">
                         <label class="form-control-label">Other Name<span class="text-danger ml-2">*</span></label>
-                        <input type="text" class="form-control" name="otherName" value="<?php echo $row['otherName']; ?>"
-                          id="exampleInputFirstName">
+                        <input type="text" class="form-control" name="otherName"
+                          value="<?php echo $row['otherName']; ?>" id="exampleInputFirstName">
                       </div>
                       <div class="col-xl-6">
                         <label class="form-control-label">Admission Number<span
@@ -221,7 +217,7 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                         echo "<div id='txtHint'></div>";
                         ?>
                       </div>
-                    </div>
+                    </div>  
                     <?php
                     if (isset($Id)) {
                       ?>
