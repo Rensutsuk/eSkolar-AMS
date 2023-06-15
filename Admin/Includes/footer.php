@@ -1,4 +1,4 @@
-<footer class="sticky-footer bg-white">
+<footer class="sticky-footer sticky-bottom bg-white">
   <div class="container my-auto">
     <div class="copyright text-center my-auto">
       <span> &copy;

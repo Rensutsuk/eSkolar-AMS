@@ -41,9 +41,11 @@ if (isset($_POST['save'])) {
 ?>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addTeacher">
-    Add
-</button>
+<div class="d-grid gap-1 d-md-flex justify-content-md-end">
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addTeacher">
+        Add
+    </button>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="addTeacher" tabindex="-1" role="dialog" aria-labelledby="teacherAddTriger"
@@ -89,8 +91,10 @@ if (isset($_POST['save'])) {
                 ?>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" name="save" class="btn btn-primary">Save</button>
+                <form method="post">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" name="save" class="btn btn-primary">Save</button>
+                </form>
             </div>
         </div>
     </div>

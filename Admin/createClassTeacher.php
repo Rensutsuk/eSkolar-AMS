@@ -169,19 +169,14 @@ if (isset($_GET['Id']) && isset($_GET['classArmId']) && isset($_GET['action']) &
 
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Create Class Teachers</h1>
-          </div>
           <div class="row">
             <div class="col-lg-12">
-              <!-- Form Basic -->
-              <?php include "Includes/addTeacher.php"; ?>
               <!-- Input Group -->
               <div class="row">
                 <div class="col-lg-12">
                   <div class="card mb-4">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                      <h6 class="m-0 font-weight-bold text-primary">All Class Teachers</h6>
+                      <h1 class="h3 mb-0 text-gray-800">Create Class Teachers</h1>
                     </div>
                     <div class="table-responsive p-3">
                       <table class="table align-items-center table-flush table-hover" id="dataTableHover">
@@ -216,15 +211,15 @@ if (isset($_GET['Id']) && isset($_GET['classArmId']) && isset($_GET['action']) &
                               $sn = $sn + 1;
                               echo "
                               <tr>
-                                <td>" . $sn . "</td>
-                                <td>" . $rows['firstName'] . "</td>
-                                <td>" . $rows['lastName'] . "</td>
-                                <td>" . $rows['emailAddress'] . "</td>
-                                <td>" . $rows['phoneNo'] . "</td>
-                                <td>" . $rows['className'] . "</td>
-                                <td>" . $rows['classArmName'] . "</td>
-                                 <td>" . $rows['dateCreated'] . "</td>
-                                <td><a href='?action=delete&Id=" . $rows['Id'] . "&classArmId=" . $rows['classArmId'] . "'><i class='fas fa-fw fa-trash'></i></a></td>
+                              <td>" . $sn . "</td>
+                              <td>" . $rows['firstName'] . "</td>
+                              <td>" . $rows['lastName'] . "</td>
+                              <td>" . $rows['emailAddress'] . "</td>
+                              <td>" . $rows['phoneNo'] . "</td>
+                              <td>" . $rows['className'] . "</td>
+                              <td>" . $rows['classArmName'] . "</td>
+                              <td>" . $rows['dateCreated'] . "</td>
+                              <td><a href='?action=delete&Id=" . $rows['Id'] . "&classArmId=" . $rows['classArmId'] . "'><i class='fas fa-fw fa-trash'></i></a></td>
                               </tr>";
                             }
                           } else {
@@ -237,6 +232,9 @@ if (isset($_GET['Id']) && isset($_GET['classArmId']) && isset($_GET['action']) &
                           ?>
                         </tbody>
                       </table>
+                    </div>
+                    <div class="card-footer align-items-right justify-content-between">
+                      <?php include "Includes/addTeacher.php"; ?>
                     </div>
                   </div>
                 </div>
