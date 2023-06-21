@@ -103,9 +103,6 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
 
 <body id="page-top">
   <div id="wrapper">
-    <!-- Sidebar -->
-    <?php include "Includes/sidebar.php"; ?>
-    <!-- Sidebar -->
     <div id="content-wrapper" class="d-flex flex-column">
       <div id="content">
         <!-- TopBar -->
@@ -135,8 +132,8 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                     <div class="form-group row mb-3">
                       <div class="col-xl-6">
                         <label class="form-control-label">Class Name<span class="text-danger ml-2">*</span></label>
-                        <input type="text" class="form-control" name="className" value="<?php echo $row['className']; ?>"
-                          id="exampleInputFirstName" placeholder="Class Name">
+                        <input type="text" class="form-control" name="className"
+                          value="<?php echo $row['className']; ?>" id="exampleInputFirstName" placeholder="Class Name">
                       </div>
                     </div>
                     <?php

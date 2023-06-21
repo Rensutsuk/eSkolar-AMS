@@ -1,45 +1,3 @@
-<?php
-if (isset($_POST['save'])) {
-
-    $firstName = $_POST['firstName'];
-    $lastName = $_POST['lastName'];
-    $emailAddress = $_POST['emailAddress'];
-
-    $phoneNo = $_POST['phoneNo'];
-    $classId = $_POST['classId'];
-    $classArmId = $_POST['classArmId'];
-    $dateCreated = date("Y-m-d");
-
-    $query = mysqli_query($conn, "select * from tblclassteacher where emailAddress ='$emailAddress'");
-    $ret = mysqli_fetch_array($query);
-
-    $sampPass = "pass123";
-    $sampPass_2 = md5($sampPass);
-
-    if ($ret > 0) {
-
-        $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>This Email Address Already Exists!</div>";
-    } else {
-
-        $query = mysqli_query($conn, "INSERT into tblclassteacher(firstName,lastName,emailAddress,password,phoneNo,classId,classArmId,dateCreated) 
-      value('$firstName','$lastName','$emailAddress','$sampPass_2','$phoneNo','$classId','$classArmId','$dateCreated')");
-
-        if ($query) {
-
-            $qu = mysqli_query($conn, "update tblclassarms set isAssigned='1' where Id ='$classArmId'");
-            if ($qu) {
-
-                $statusMsg = "<div class='alert alert-success'  style='margin-right:700px;'>Created Successfully!</div>";
-            } else {
-                $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
-            }
-        } else {
-            $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
-        }
-    }
-}
-?>
-
 <!-- Button trigger modal -->
 <div class="d-grid gap-1 d-md-flex justify-content-md-end">
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addTeacher">
@@ -91,7 +49,7 @@ if (isset($_POST['save'])) {
                 ?>
             </div>
             <div class="modal-footer">
-                <form method="post">
+                <form method="post" action="Includes/process_addTeach.php">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" name="save" class="btn btn-primary">Save</button>
                 </form>
