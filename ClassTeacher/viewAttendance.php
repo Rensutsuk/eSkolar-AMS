@@ -2,6 +2,9 @@
 error_reporting(0);
 include '../Includes/dbcon.php';
 include '../Includes/session.php';
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -27,10 +30,11 @@ include '../Includes/session.php';
         <!-- TopBar -->
         <?php include "Includes/topbar.php"; ?>
         <!-- Topbar -->
+
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">View Class Attendance</h1>
+            <h1 class="h3 mb-0 text-grey-800">Attendance</h1>
           </div>
 
           <div class="row">
@@ -54,157 +58,143 @@ include '../Includes/session.php';
                       <input type="text" class="form-control" name="classArmName" value="<?php echo $row['classArmName']; ?>" id="exampleInputFirstName" placeholder="Class Arm Name">
                         </div> -->
                     </div>
-                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modelId">
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+                      data-target="#classAttendance">
                       View Attendance
                     </button>
+                  </form>
                 </div>
               </div>
-              <script>
-                $('#exampleModal').on('show.bs.modal', event => {
-                  var button = $(event.relatedTarget);
-                  var modal = $(this);
-                  // Use above variables to manipulate the DOM
 
-                });
-              </script>
-              <!-- Modal -->
-              <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+              <!-- Input Group -->
+              <div class="modal fade" id="classAttendance" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
                 aria-hidden="true">
-                <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title">Class Attendance</h5>
+                      <h5 class="modal-title text-primary">Class Attendance</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
                     <div class="modal-body">
-                      <?php
-                      $dateTaken = $_POST['dateTaken'];
+                      <div class="container-fluid">
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <div class="card mb-4">
+                              <div class="table-responsive p-3">
+                                <table class="table align-items-center table-flush table-hover" id="dataTableHover">
+                                  <thead class="thead-light">
+                                    <tr>
+                                      <th>#</th>
+                                      <th>First Name</th>
+                                      <th>Last Name</th>
+                                      <th>Other Name</th>
+                                      <th>Admission No</th>
+                                      <th>Class</th>
+                                      <th>Class Arm</th>
+                                      <th>Session</th>
+                                      <th>Term</th>
+                                      <th>Status</th>
+                                      <th>Date</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <?php
 
-                      $query = "SELECT tblattendance.Id,tblattendance.status,tblattendance.dateTimeTaken,tblclass.className,
-                                tblclassarms.classArmName,tblsessionterm.sessionName,tblsessionterm.termId,tblterm.termName,
-                                tblstudents.firstName,tblstudents.lastName,tblstudents.otherName,tblstudents.admissionNumber
-                                FROM tblattendance
-                                INNER JOIN tblclass ON tblclass.Id = tblattendance.classId
-                                INNER JOIN tblclassarms ON tblclassarms.Id = tblattendance.classArmId
-                                INNER JOIN tblsessionterm ON tblsessionterm.Id = tblattendance.sessionTermId
-                                INNER JOIN tblterm ON tblterm.Id = tblsessionterm.termId
-                                INNER JOIN tblstudents ON tblstudents.admissionNumber = tblattendance.admissionNo
-                                where tblattendance.dateTimeTaken = '$dateTaken' and tblattendance.classId = '$_SESSION[classId]' and tblattendance.classArmId = '$_SESSION[classArmId]'";
-                      $rs = $conn->query($query);
-                      $num = $rs->num_rows;
-                      $sn = 0;
-                      $status = "";
+                                    if (isset($_POST['view'])) {
 
-                      if ($num > 0) {
-                        ?>
-                        <div class="table-responsive p-3">
-                          <table class="table align-items-center table-flush table-hover" id="dataTableHover">
-                            <thead class="thead-light">
+                                      $dateTaken = $_POST['dateTaken'];
+
+                                      $query = "SELECT tblattendance.Id,tblattendance.status,tblattendance.dateTimeTaken,tblclass.className,
+                      tblclassarms.classArmName,tblsessionterm.sessionName,tblsessionterm.termId,tblterm.termName,
+                      tblstudents.firstName,tblstudents.lastName,tblstudents.otherName,tblstudents.admissionNumber
+                      FROM tblattendance
+                      INNER JOIN tblclass ON tblclass.Id = tblattendance.classId
+                      INNER JOIN tblclassarms ON tblclassarms.Id = tblattendance.classArmId
+                      INNER JOIN tblsessionterm ON tblsessionterm.Id = tblattendance.sessionTermId
+                      INNER JOIN tblterm ON tblterm.Id = tblsessionterm.termId
+                      INNER JOIN tblstudents ON tblstudents.admissionNumber = tblattendance.admissionNo
+                      where tblattendance.dateTimeTaken = '$dateTaken' and tblattendance.classId = '$_SESSION[classId]' and tblattendance.classArmId = '$_SESSION[classArmId]'";
+                                      $rs = $conn->query($query);
+                                      $num = $rs->num_rows;
+                                      $sn = 0;
+                                      $status = "";
+                                      if ($num > 0) {
+                                        while ($rows = $rs->fetch_assoc()) {
+                                          if ($rows['status'] == '1') {
+                                            $status = "Present";
+                                            $colour = "#00FF00";
+                                          } else {
+                                            $status = "Absent";
+                                            $colour = "#FF0000";
+                                          }
+                                          $sn = $sn + 1;
+                                          echo "
                               <tr>
-                                <th>#</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Other Name</th>
-                                <th>Admission No</th>
-                                <th>Class</th>
-                                <th>Class Arm</th>
-                                <th>Session</th>
-                                <th>Term</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                              </tr>
-                            </thead>
-
-                            <tbody>
-                              <?php
-                              while ($rows = $rs->fetch_assoc()) {
-                                if ($rows['status'] == '1') {
-                                  $status = "Present";
-                                  $colour = "#00FF00";
-                                } else {
-                                  $status = "Absent";
-                                  $colour = "#FF0000";
-                                }
-                                $sn = $sn + 1;
-                                echo "
-                                        <tr>
-                                          <td>" . $sn . "</td>
-                                           <td>" . $rows['firstName'] . "</td>
-                                          <td>" . $rows['lastName'] . "</td>
-                                          <td>" . $rows['otherName'] . "</td>
-                                          <td>" . $rows['admissionNumber'] . "</td>
-                                          <td>" . $rows['className'] . "</td>
-                                          <td>" . $rows['classArmName'] . "</td>
-                                          <td>" . $rows['sessionName'] . "</td>
-                                          <td>" . $rows['termName'] . "</td>
-                                          <td style='background-color:" . $colour . "'>" . $status . "</td>
-                                          <td>" . $rows['dateTimeTaken'] . "</td>
-                                        </tr>";
-                              }
-                      } else {
-                        echo
-                          "<div class='alert alert-danger' role='alert'>
-                                      No Record Found!
-                                      </div>";
-                      }
-                      ?>
-                          </tbody>
-                        </table>
+                                <td>" . $sn . "</td>
+                                 <td>" . $rows['firstName'] . "</td>
+                                <td>" . $rows['lastName'] . "</td>
+                                <td>" . $rows['otherName'] . "</td>
+                                <td>" . $rows['admissionNumber'] . "</td>
+                                <td>" . $rows['className'] . "</td>
+                                <td>" . $rows['classArmName'] . "</td>
+                                <td>" . $rows['sessionName'] . "</td>
+                                <td>" . $rows['termName'] . "</td>
+                                <td style='background-color:" . $colour . "'>" . $status . "</td>
+                                <td>" . $rows['dateTimeTaken'] . "</td>
+                              </tr>";
+                                        }
+                                      } else {
+                                        echo
+                                          "<div class='alert alert-danger' role='alert'>
+                            No Record Found!
+                            </div>";
+                                      }
+                                    }
+                                    ?>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
+                    <!---Container Fluid-->
                   </div>
                 </div>
               </div>
+              <!-- Footer -->
+              <?php include "Includes/footer.php"; ?>
+              <!-- Footer -->
+
+              <!-- Scroll to top -->
+              <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+              </a>
+
+              <script src="../vendor/jquery/jquery.min.js"></script>
+              <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+              <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+              <script src="js/ruang-admin.min.js"></script>
+              <!-- Page level plugins -->
+              <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
+              <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+              <!-- Page level custom scripts -->
+              <script>
+                $(document).ready(function () {
+                  $('#dataTable').DataTable(); // ID From dataTable 
+                  $('#dataTableHover').DataTable(); // ID From dataTable with Hover
+                });
+              </script>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <!--Row-->
-
-    <!-- Documentation Link -->
-    <!-- <div class="row">
-            <div class="col-lg-12 text-center">
-              <p>For more documentations you can visit<a href="https://getbootstrap.com/docs/4.3/components/forms/"
-                  target="_blank">
-                  bootstrap forms documentations.</a> and <a
-                  href="https://getbootstrap.com/docs/4.3/components/input-group/" target="_blank">bootstrap input
-                  groups documentations</a></p>
-            </div>
-          </div> -->
-
   </div>
-  <!---Container Fluid-->
-  </div>
-  <!-- Footer -->
-  <?php include "Includes/footer.php"; ?>
-  <!-- Footer -->
-  </div>
-  </div>
-
-  <!-- Scroll to top -->
-  <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
-
-  <script src="../vendor/jquery/jquery.min.js"></script>
-  <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
-  <script src="js/ruang-admin.min.js"></script>
-  <!-- Page level plugins -->
-  <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
-  <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-  <!-- Page level custom scripts -->
-  <script>
-    $(document).ready(function () {
-      $('#dataTable').DataTable(); // ID From dataTable 
-      $('#dataTableHover').DataTable(); // ID From dataTable with Hover
-    });
-  </script>
 </body>
 
 </html>
