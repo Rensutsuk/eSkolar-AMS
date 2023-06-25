@@ -2929,8 +2929,8 @@ fieldset:disabled a.btn {
 
 .btn-primary:hover {
     color: #fff;
-    background-color: #661e30;
-    border-color: #661e30
+    background-color: #6b1c1d;
+    border-color: #6b1c1d
 }
 
 .btn-primary.focus,
@@ -5706,8 +5706,8 @@ input[type=submit].btn-block {
 .page-item.active .page-link {
     z-index: 1;
     color: #fff;
-    background-color: #6777ef;
-    border-color: #6777ef
+    background-color: #9e2a2b;
+    border-color: #9e2a2b
 }
 
 .page-item.disabled .page-link {
@@ -11467,7 +11467,7 @@ button.bg-dark:hover {
 }
 
 .text-primary {
-    color: #6777ef !important
+    color: white !important
 }
 
 a.text-primary:focus,

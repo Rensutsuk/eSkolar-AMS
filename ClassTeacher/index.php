@@ -45,10 +45,6 @@ $rrw = $rs->fetch_assoc();
             <h1 class="h3 mb-0 text-gray-800">Class Teacher Dashboard (
               <?php echo $rrw['className'] . ' - ' . $rrw['classArmName']; ?>)
             </h1>
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Home</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-            </ol>
           </div>
 
           <div class="row mb-3">

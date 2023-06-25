@@ -8,7 +8,7 @@ $fullName = $rows['firstName'] . " " . $rows['lastName'];
 ;
 
 ?>
-<nav class="navbar navbar-expand bg-body-tertiary navbar-light bg-gradient-primary topbar mb-4 static-top">
+<nav class="navbar navbar-expand bg-body-tertiary navbar-light bg-navbar topbar mb-4 static-top">
   <div class="container-fluid">
     <!-- Logo -->
     <a class="navbar-brand nav-link text-white" href="index.php">

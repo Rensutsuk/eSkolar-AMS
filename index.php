@@ -14,7 +14,7 @@ session_start();
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/attnlg.jpg" rel="icon">
-  <title>AMS - Log</title>
+  <title>eSkolar - Login</title>
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/ruang-admin.min.css" rel="stylesheet">
@@ -33,7 +33,6 @@ session_start();
             <div class="login-form">
               <div class="text-center">
                 <img src="img/logo/attnlg.jpg" style="width:60px;height:60px">
-                <br></br>
               </div>
               <h5 align="center" style="color: yellow;">eSkolar Attendance</h5>
               <form class="user" method="Post" action="">
@@ -51,13 +50,6 @@ session_start();
                 <div class="form-group">
                   <input type="password" name="password" required class="form-control" id="exampleInputPassword"
                     placeholder="Enter Password">
-                </div>
-                <div class="form-group">
-                  <div class="custom-control custom-checkbox small" style="line-height: 1.5rem;">
-                    <input type="checkbox" class="custom-control-input" id="customCheck">
-                    <!-- <label class="custom-control-label" for="customCheck">Remember
-                          Me</label> -->
-                  </div>
                 </div>
                 <div class="form-group">
                   <input type="submit" class="btn btn-success btn-block" value="Login" name="login" />
