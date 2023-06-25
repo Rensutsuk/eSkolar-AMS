@@ -7,11 +7,11 @@ $fullName = $rows['firstName'] . " " . $rows['lastName'];
 
 ?>
 
-<nav class="navbar navbar-expand bg-body-tertiary navbar-light bg-gradient-primary topbar mb-4 static-top">
+<nav class="navbar navbar-expand bg-body-tertiary navbar-light bg-navbar topbar mb-4 static-top">
   <div class="container-fluid">
     <!-- Logo -->
     <a class="navbar-brand nav-link text-white" href="index.php">
-      <img src="img\logo\attnlg.png" width="40" height="40" class="d-inline-block align-text-center">
+      <img src="img\logo\attnlg.png" width="50" height="50" class="d-inline-block align-text-center">
       eSkolar AMS
     </a>
     <!-- Navbar -->
@@ -44,10 +44,6 @@ $fullName = $rows['firstName'] . " " . $rows['lastName'];
           </b></span>
       </button>
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="triggerId">
-        <a class="dropdown-item" href="#">
-          <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-          Profile
-        </a>
         <a class="dropdown-item" href="logout.php">
           <i class="fas fa-power-off fa-fw mr-2 text-danger"></i>
           Logout

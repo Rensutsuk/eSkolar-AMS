@@ -39,10 +39,10 @@ a:focus {
 .container,
 .container-fluid,
 .container-login {
-    max-width: 480px;
+    max-width: 1300px;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
-    margin-left: auto;  
+    margin-left: auto;
     margin-right: auto;
 }
 
@@ -212,8 +212,12 @@ a:focus {
     background: linear-gradient(87deg, #172b4d 0, #1a174d 100%) !important
 }
 
-.bg-gradient-login {
-    background-color: #f8f9fc;
+.bg-login {
+    background-color: #810403;
+    background-size: cover
+}
+.bg-login-form {
+    background-color: #9e2a2b;
     background-size: cover
 }
 

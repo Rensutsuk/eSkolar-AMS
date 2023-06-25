@@ -21,20 +21,21 @@ session_start();
 
 </head>
 
-<body class="bg-gradient-login" style="background-image: url('img/logo/loral1.jpe00g');">
-  <!-- Login Content -->
+<body class="bg-login">
   <div class="container-login">
-    <div class="card shadow-sm my-5">
+    <div class="card shadow-sm my-5 bg-login-form">
       <div class="card-body p-0">
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-8">
+            <img src="img\PUP_thumbnail.png" class="img-fluid" alt="PUP">
+          </div>
+          <div class="col-6 col-md-4">
             <div class="login-form">
-              <h5 align="center">STUDENT ATTENDANCE SYSTEM</h5>
               <div class="text-center">
-                <img src="img/logo/attnlg.jpg" style="width:100px;height:100px">
-                <br><br>
-                <h1 class="h4 text-gray-900 mb-4">Admin Login Panel</h1>
+                <img src="img/logo/attnlg.jpg" style="width:60px;height:60px">
+                <br></br>
               </div>
+              <h5 align="center" style="color: yellow;">eSkolar Attendance</h5>
               <form class="user" method="Post" action="">
                 <div class="form-group">
                   <select required name="userType" class="form-control mb-3">
@@ -131,17 +132,6 @@ session_start();
                 }
               }
               ?>
-
-              <!-- <hr>
-                    <a href="index.html" class="btn btn-google btn-block">
-                      <i class="fab fa-google fa-fw"></i> Login with Google
-                    </a>
-                    <a href="index.html" class="btn btn-facebook btn-block">
-                      <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
-                    </a> -->
-
-
-              <div class="text-center"></div>
             </div>
           </div>
         </div>
