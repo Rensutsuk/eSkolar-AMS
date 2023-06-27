@@ -21,11 +21,11 @@ session_start();
 
 </head>
 
-<body class="bg-login">
-  <div class="container-login">
+<body class="bg-login align-center">
+  <div class="container-login d-flex align-items-center justify-content-center vh-100">
     <div class="card shadow-sm my-5 bg-login-form">
       <div class="card-body p-0">
-        <div class="row">
+        <div class="row justify-content-center align-items-center">
           <div class="col-md-8">
             <img src="img\PUP_thumbnail.png" class="img-fluid" alt="PUP">
           </div>
