@@ -237,8 +237,7 @@ if (isset($_GET['Id']) && isset($_GET['classArmId']) && isset($_GET['action']) &
                       <!-- Button trigger modal -->
                       <div class="d-grid gap-1 d-md-flex justify-content-md-end">
                         <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
-                          data-target="#addTeacher">
-                          Add
+                          data-target="#addTeacher"> Add
                         </button>
                       </div>
                       <!-- Modal -->
@@ -252,46 +251,49 @@ if (isset($_GET['Id']) && isset($_GET['classArmId']) && isset($_GET['action']) &
                                 <span aria-hidden="true">&times;</span>
                               </button>
                             </div>
-                            <div class="modal-body">
-                              <label class="form-control-label">Firstname<span class="text-danger ml-2">*</span></label>
-                              <input type="text" class="form-control" required name="firstName"
-                                value="<?php echo $row['firstName']; ?>" id="exampleInputFirstName">
-                              <label class="form-control-label">Lastname<span class="text-danger ml-2">*</span></label>
-                              <input type="text" class="form-control" required name="lastName"
-                                value="<?php echo $row['lastName']; ?>" id="exampleInputFirstName">
-                              <label class="form-control-label">Email Address<span
-                                  class="text-danger ml-2">*</span></label>
-                              <input type="email" class="form-control" required name="emailAddress"
-                                value="<?php echo $row['emailAddress']; ?>" id="exampleInputFirstName">
-                              <label class="form-control-label">Phone No<span class="text-danger ml-2">*</span></label>
-                              <input type="text" class="form-control" name="phoneNo"
-                                value="<?php echo $row['phoneNo']; ?>" id="exampleInputFirstName">
-                              <label class="form-control-label">Select Class<span
-                                  class="text-danger ml-2">*</span></label>
-                              <?php
-                              $qry = "SELECT * FROM tblclass ORDER BY className ASC";
-                              $result = $conn->query($qry);
-                              $num = $result->num_rows;
-                              if ($num > 0) {
-                                echo ' <select required name="classId" onchange="classArmDropdown(this.value)" class="form-control mb-3">';
-                                echo '<option value="">--Select Class--</option>';
-                                while ($rows = $result->fetch_assoc()) {
-                                  echo '<option value="' . $rows['Id'] . '" >' . $rows['className'] . '</option>';
+                            <form method="post">
+                              <div class="modal-body">
+                                <label class="form-control-label">Firstname<span
+                                    class="text-danger ml-2">*</span></label>
+                                <input type="text" class="form-control" required name="firstName"
+                                  value="<?php echo $row['firstName']; ?>" id="exampleInputFirstName">
+                                <label class="form-control-label">Lastname<span
+                                    class="text-danger ml-2">*</span></label>
+                                <input type="text" class="form-control" required name="lastName"
+                                  value="<?php echo $row['lastName']; ?>" id="exampleInputFirstName">
+                                <label class="form-control-label">Email Address<span
+                                    class="text-danger ml-2">*</span></label>
+                                <input type="email" class="form-control" required name="emailAddress"
+                                  value="<?php echo $row['emailAddress']; ?>" id="exampleInputFirstName">
+                                <label class="form-control-label">Phone No<span
+                                    class="text-danger ml-2">*</span></label>
+                                <input type="text" class="form-control" name="phoneNo"
+                                  value="<?php echo $row['phoneNo']; ?>" id="exampleInputFirstName">
+                                <label class="form-control-label">Select Class<span
+                                    class="text-danger ml-2">*</span></label>
+                                <?php
+                                $qry = "SELECT * FROM tblclass ORDER BY className ASC";
+                                $result = $conn->query($qry);
+                                $num = $result->num_rows;
+                                if ($num > 0) {
+                                  echo ' <select required name="classId" onchange="classArmDropdown(this.value)" class="form-control mb-3">';
+                                  echo '<option value="">--Select Class--</option>';
+                                  while ($rows = $result->fetch_assoc()) {
+                                    echo '<option value="' . $rows['Id'] . '" >' . $rows['className'] . '</option>';
+                                  }
+                                  echo '</select>';
                                 }
-                                echo '</select>';
-                              }
-                              ?>
-                              <label class="form-control-label">Class Arm<span class="text-danger ml-2">*</span></label>
-                              <?php
-                              echo "<div id='txtHint'></div>";
-                              ?>
-                            </div>
-                            <div class="modal-footer">
-                              <form method="post">
+                                ?>
+                                <label class="form-control-label">Class Arm<span
+                                    class="text-danger ml-2">*</span></label>
+                                <?php
+                                echo "<div id='txtHint'></div>";
+                                ?>
+                              </div>
+                              <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button type="submit" name="save" class="btn btn-primary">Save</button>
-                              </form>
-                            </div>
+                            </form>
                           </div>
                         </div>
                       </div>
@@ -300,10 +302,11 @@ if (isset($_GET['Id']) && isset($_GET['classArmId']) && isset($_GET['action']) &
                 </div>
               </div>
             </div>
-            <!--Row-->
+          </div>
+          <!--Row-->
 
-            <!-- Documentation Link -->
-            <!-- <div class="row">
+          <!-- Documentation Link -->
+          <!-- <div class="row">
             <div class="col-lg-12 text-center">
               <p>For more documentations you can visit<a href="https://getbootstrap.com/docs/4.3/components/forms/"
                   target="_blank">
@@ -313,35 +316,35 @@ if (isset($_GET['Id']) && isset($_GET['classArmId']) && isset($_GET['action']) &
             </div>
           </div> -->
 
-          </div>
-          <!---Container Fluid-->
         </div>
-        <!-- Footer -->
-        <?php include "Includes/footer.php"; ?>
-        <!-- Footer -->
+        <!---Container Fluid-->
       </div>
+      <!-- Footer -->
+      <?php include "Includes/footer.php"; ?>
+      <!-- Footer -->
     </div>
+  </div>
 
-    <!-- Scroll to top -->
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fas fa-angle-up"></i>
-    </a>
+  <!-- Scroll to top -->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
 
-    <script src="../vendor/jquery/jquery.min.js"></script>
-    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="js/ruang-admin.min.js"></script>
-    <!-- Page level plugins -->
-    <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+  <script src="../vendor/jquery/jquery.min.js"></script>
+  <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="js/ruang-admin.min.js"></script>
+  <!-- Page level plugins -->
+  <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-    <!-- Page level custom scripts -->
-    <script>
-      $(document).ready(function () {
-        $('#dataTable').DataTable(); // ID From dataTable 
-        $('#dataTableHover').DataTable(); // ID From dataTable with Hover
-      });
-    </script>
+  <!-- Page level custom scripts -->
+  <script>
+    $(document).ready(function () {
+      $('#dataTable').DataTable(); // ID From dataTable 
+      $('#dataTableHover').DataTable(); // ID From dataTable with Hover
+    });
+  </script>
 </body>
 
 </html>

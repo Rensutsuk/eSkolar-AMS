@@ -68,7 +68,6 @@ $rrw = $rs->fetch_assoc();
         <div class="container-fluid" id="container-wrapper">
           <div class="row">
             <div class="col-lg-12">
-              <!-- Form Basic -->
               <!-- Input Group -->
               <div class="row">
                 <div class="col-lg-12">

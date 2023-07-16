@@ -45,7 +45,7 @@ $fullName = $rows['firstName'] . " " . $rows['lastName'];
           </b></span>
       </button>
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="triggerId">
-        <a class="dropdown-item" href="#">
+        <a class="dropdown-item" href="profile.php">
           <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
           Profile
         </a>

@@ -1,6 +1,8 @@
 <?php
 include 'Includes/dbcon.php';
 session_start();
+
+$imagePath = 'img\PUP_thumbnail.png';
 ?>
 
 <!DOCTYPE html>
@@ -21,111 +23,104 @@ session_start();
 
 </head>
 
-<body class="bg-login align-center">
-  <div class="container-login d-flex align-items-center justify-content-center vh-100">
-    <div class="card shadow-sm my-5 bg-login-form">
-      <div class="card-body p-0">
-        <div class="row justify-content-center align-items-center">
-          <div class="col-md-8">
-            <img src="img\PUP_thumbnail.png" class="img-fluid" alt="PUP">
+<body class="container-login bg-login-image align-center" style="background-image: url('img/PUP_thumbnail.png');">
+  <div class="row justify-content-end">
+    <div class="col col-lg-4">
+      <div class="card login-card justify-content-center">
+        <div class="login-form">
+          <div class="text-center">
+            <img src="img/logo/attnlg.jpg" style="width:100px;height:100px; padding:0.5rem">
           </div>
-          <div class="col-6 col-md-4">
-            <div class="login-form">
-              <div class="text-center">
-                <img src="img/logo/attnlg.jpg" style="width:60px;height:60px">
-              </div>
-              <h5 align="center" style="color: yellow;">eSkolar Attendance</h5>
-              <form class="user" method="Post" action="">
-                <div class="form-group">
-                  <select required name="userType" class="form-control mb-3">
-                    <option value="">--Select User Roles--</option>
-                    <option value="Administrator">Administrator</option>
-                    <option value="ClassTeacher">ClassTeacher</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <input type="text" class="form-control" required name="username" id="exampleInputEmail"
-                    placeholder="Enter Email Address">
-                </div>
-                <div class="form-group">
-                  <input type="password" name="password" required class="form-control" id="exampleInputPassword"
-                    placeholder="Enter Password">
-                </div>
-                <div class="form-group">
-                  <input type="submit" class="btn btn-success btn-block" value="Login" name="login" />
-                </div>
-              </form>
+          <h2 align="center" style="color: yellow;">eSkolar Attendance</h2>
+          <form class="user" method="Post" action="">
+            <div class="form-group">
+              <select required name="userType" class="form-control mb-3">
+                <option value="">--Select User Roles--</option>
+                <option value="Administrator">Administrator</option>
+                <option value="ClassTeacher">ClassTeacher</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" required name="username" id="exampleInputEmail"
+                placeholder="Enter Email Address">
+            </div>
+            <div class="form-group">
+              <input type="password" name="password" required class="form-control" id="exampleInputPassword"
+                placeholder="Enter Password">
+            </div>
+            <div class="form-group">
+              <input type="submit" class="btn btn-success btn-block" value="Login" name="login" />
+            </div>
+          </form>
 
-              <?php
+          <?php
 
-              if (isset($_POST['login'])) {
+          if (isset($_POST['login'])) {
 
-                $userType = $_POST['userType'];
-                $username = $_POST['username'];
-                $password = $_POST['password'];
-                $password = md5($password);
+            $userType = $_POST['userType'];
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $password = md5($password);
 
-                if ($userType == "Administrator") {
+            if ($userType == "Administrator") {
 
-                  $query = "SELECT * FROM tbladmin WHERE emailAddress = '$username' AND password = '$password'";
-                  $rs = $conn->query($query);
-                  $num = $rs->num_rows;
-                  $rows = $rs->fetch_assoc();
+              $query = "SELECT * FROM tbladmin WHERE emailAddress = '$username' AND password = '$password'";
+              $rs = $conn->query($query);
+              $num = $rs->num_rows;
+              $rows = $rs->fetch_assoc();
 
-                  if ($num > 0) {
+              if ($num > 0) {
 
-                    $_SESSION['userId'] = $rows['Id'];
-                    $_SESSION['firstName'] = $rows['firstName'];
-                    $_SESSION['lastName'] = $rows['lastName'];
-                    $_SESSION['emailAddress'] = $rows['emailAddress'];
+                $_SESSION['userId'] = $rows['Id'];
+                $_SESSION['firstName'] = $rows['firstName'];
+                $_SESSION['lastName'] = $rows['lastName'];
+                $_SESSION['emailAddress'] = $rows['emailAddress'];
 
-                    echo "<script type = \"text/javascript\">
+                echo "<script type = \"text/javascript\">
         window.location = (\"Admin/index.php\")
         </script>";
-                  } else {
+              } else {
 
-                    echo "<div class='alert alert-danger' role='alert'>
+                echo "<div class='alert alert-warning' align='center' role='alert'>
         Invalid Username/Password!
         </div>";
 
-                  }
-                } else if ($userType == "ClassTeacher") {
+              }
+            } else if ($userType == "ClassTeacher") {
 
-                  $query = "SELECT * FROM tblclassteacher WHERE emailAddress = '$username' AND password = '$password'";
-                  $rs = $conn->query($query);
-                  $num = $rs->num_rows;
-                  $rows = $rs->fetch_assoc();
+              $query = "SELECT * FROM tblclassteacher WHERE emailAddress = '$username' AND password = '$password'";
+              $rs = $conn->query($query);
+              $num = $rs->num_rows;
+              $rows = $rs->fetch_assoc();
 
-                  if ($num > 0) {
+              if ($num > 0) {
 
-                    $_SESSION['userId'] = $rows['Id'];
-                    $_SESSION['firstName'] = $rows['firstName'];
-                    $_SESSION['lastName'] = $rows['lastName'];
-                    $_SESSION['emailAddress'] = $rows['emailAddress'];
-                    $_SESSION['classId'] = $rows['classId'];
-                    $_SESSION['classArmId'] = $rows['classArmId'];
+                $_SESSION['userId'] = $rows['Id'];
+                $_SESSION['firstName'] = $rows['firstName'];
+                $_SESSION['lastName'] = $rows['lastName'];
+                $_SESSION['emailAddress'] = $rows['emailAddress'];
+                $_SESSION['classId'] = $rows['classId'];
+                $_SESSION['classArmId'] = $rows['classArmId'];
 
-                    echo "<script type = \"text/javascript\">
+                echo "<script type = \"text/javascript\">
         window.location = (\"ClassTeacher/index.php\")
         </script>";
-                  } else {
+              } else {
 
-                    echo "<div class='alert alert-danger' role='alert'>
+                echo "<div class='alert alert-warning' align='center' role='alert'>
         Invalid Username/Password!
         </div>";
 
-                  }
-                } else {
-
-                  echo "<div class='alert alert-danger' role='alert'>
-        Invalid Username/Password!
-        </div>";
-
-                }
               }
-              ?>
-            </div>
-          </div>
+            } else {
+
+              echo "<div class='alert alert-warning' align='center' role='alert'>
+        Invalid Username/Password!
+        </div>";
+
+            }
+          }
+          ?>
         </div>
       </div>
     </div>

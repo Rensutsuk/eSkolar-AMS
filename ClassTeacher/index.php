@@ -41,8 +41,8 @@ $rrw = $rs->fetch_assoc();
         <!-- Topbar -->
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Class Teacher Dashboard (
+          <div class="card-header bg-navbar py-3 d-flex flex-row align-items-center justify-content-between">
+            <h1 class="h5 mb-0 text-primary">Class Teacher Dashboard (
               <?php echo $rrw['className'] . ' - ' . $rrw['classArmName']; ?>)
             </h1>
           </div>
