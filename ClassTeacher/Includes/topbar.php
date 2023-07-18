@@ -30,7 +30,6 @@ $fullName = $rows['firstName'] . " " . $rows['lastName'];
             <li><a class="dropdown-item" href="viewAttendance.php">Class Attendance</a></li>
             <li><a class="dropdown-item" href="viewStudentAttendance.php">Student Attendance</a></li>
             <li><a class="dropdown-item" href="takeAttendance.php">Take Attendance</a></li>
-            <li><a class="dropdown-item" href="downloadRecord.php">Today's Report (xls)</a></li>
           </ul>
         </li>
       </ul>

@@ -2,7 +2,6 @@
 error_reporting(0);
 include '../Includes/dbcon.php';
 include '../Includes/session.php';
-
 ?>
         <table border="1">
         <thead>
@@ -22,7 +21,7 @@ include '../Includes/session.php';
         </thead>
 
 <?php 
-$filename="Attendance list";
+$filename="Attendance List";
 $dateTaken = date("Y-m-d");
 
 $cnt=1;			
