@@ -1,7 +1,78 @@
 <?php
-error_reporting(0);
+// error_reporting(0);
 include '../Includes/dbcon.php';
 include '../Includes/session.php';
+
+function getStudentsInUserClass()
+{
+  global $conn;
+  $classId = $_SESSION['classId'];
+  $query = "SELECT * FROM tblstudents WHERE classId = ?";
+  $stmt = $conn->prepare($query);
+  $stmt->bind_param("s", $classId);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  $students = [];
+  while ($row = $result->fetch_assoc()) {
+    $students[] = $row;
+  }
+  return $students;
+}
+
+// Function to fetch attendance data for a specific student and date range
+function getStudentAttendanceData($studentId, $startDate = null, $endDate = null)
+{
+  global $conn;
+  $query = "SELECT tblattendance.Id, tblattendance.status, tblattendance.dateTimeTaken, tblclass.className,
+            tblclassarms.classArmName, tblsessionterm.sessionName, tblsessionterm.termId, tblterm.termName,
+            tblstudents.firstName, tblstudents.lastName, tblstudents.otherName, tblstudents.admissionNumber
+            FROM tblattendance
+            INNER JOIN tblclass ON tblclass.Id = tblattendance.classId
+            INNER JOIN tblclassarms ON tblclassarms.Id = tblattendance.classArmId
+            INNER JOIN tblsessionterm ON tblsessionterm.Id = tblattendance.sessionTermId
+            INNER JOIN tblterm ON tblterm.Id = tblsessionterm.termId
+            INNER JOIN tblstudents ON tblstudents.admissionNumber = tblattendance.admissionNo
+            WHERE tblstudents.Id = ?";
+
+  $parameters = array($studentId);
+
+  if (!empty($startDate) && !empty($endDate)) {
+    $query .= " AND tblattendance.dateTimeTaken BETWEEN ? AND ?";
+    $parameters[] = $startDate;
+    $parameters[] = $endDate;
+  }
+
+  $stmt = $conn->prepare($query);
+  $stmt->bind_param(str_repeat('s', count($parameters)), ...$parameters);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  $attendanceData = [];
+  while ($row = $result->fetch_assoc()) {
+    $status = ($row['status'] == '1') ? "Present" : "Absent";
+    $row['status'] = $status;
+    $attendanceData[] = $row;
+  }
+
+  return $attendanceData;
+}
+
+// Check if form is submitted and handle the request
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['viewAttendance'])) {
+  $studentId = $_POST['student'];
+  $startDate = null;
+  $endDate = null;
+
+  if ($_POST['dateRangeOption'] === 'range') {
+    $startDate = $_POST['startDate'];
+    $endDate = $_POST['endDate'];
+  }
+
+  $attendanceData = getStudentAttendanceData($studentId, $startDate, $endDate);
+  echo json_encode($attendanceData);
+  exit;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -13,36 +84,11 @@ include '../Includes/session.php';
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link href="img/logo/attnlg.jpg" rel="icon">
-  <title>Dashboard</title>
+  <link href="img/logo/attnlg.png" rel="icon">
+  <title>View Class Attendance</title>
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/ruang-admin.min.css" rel="stylesheet">
-
-  <script>
-    function typeDropDown(str) {
-      if (str == "") {
-        document.getElementById("txtHint").innerHTML = "";
-        return;
-      } else {
-        if (window.XMLHttpRequest) {
-          // code for IE7+, Firefox, Chrome, Opera, Safari
-          xmlhttp = new XMLHttpRequest();
-        } else {
-          // code for IE6, IE5
-          xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function () {
-          if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("txtHint").innerHTML = this.responseText;
-          }
-        };
-        xmlhttp.open("GET", "ajaxCallTypes.php?tid=" + str, true);
-        xmlhttp.send();
-      }
-    }
-  </script>
-
 </head>
 
 <body id="page-top">
@@ -51,241 +97,225 @@ include '../Includes/session.php';
       <div id="content">
         <!-- TopBar -->
         <?php include "Includes/topbar.php"; ?>
-        <!-- Topbar -->
+
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">View Student Attendance</h1>
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Home</a></li>
-              <li class="breadcrumb-item active" aria-current="page">View Student Attendance</li>
-            </ol>
-          </div>
-
           <div class="row">
             <div class="col-lg-12">
-              <!-- Form Basic -->
               <div class="card mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">View Student Attendance</h6>
-                  <?php echo $statusMsg; ?>
+                <div class="card-header bg-navbar py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h1 class="h5 mb-0 text-primary">View Student Attendance</h1>
                 </div>
                 <div class="card-body">
-                  <form method="post">
+                  <form id="attendanceForm" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                     <div class="form-group row mb-3">
                       <div class="col-xl-6">
-                        <label class="form-control-label">Select Student<span class="text-danger ml-2">*</span></label>
-                        <?php
-                        $qry = "SELECT * FROM tblstudents where classId = '$_SESSION[classId]' and classArmId = '$_SESSION[classArmId]' ORDER BY firstName ASC";
-                        $result = $conn->query($qry);
-                        $num = $result->num_rows;
-                        if ($num > 0) {
-                          echo ' <select required name="admissionNumber" class="form-control mb-3">';
-                          echo '<option value="">--Select Student--</option>';
-                          while ($rows = $result->fetch_assoc()) {
-                            echo '<option value="' . $rows['admissionNumber'] . '" >' . $rows['firstName'] . ' ' . $rows['lastName'] . '</option>';
+                        <label for="studentSelect">Select Student:</label>
+                        <select class="form-control" name="student" id="studentSelect" required>
+                          <option value="" disabled selected>Select a student</option>
+                          <?php
+                          $students = getStudentsInUserClass(); // Fetch students within the class of the user/teacher
+                          foreach ($students as $student) {
+                            echo "<option value='{$student['Id']}'>{$student['firstName']} {$student['lastName']}</option>";
                           }
-                          echo '</select>';
-                        }
-                        ?>
-                      </div>
-                      <div class="col-xl-6">
-                        <label class="form-control-label">Type<span class="text-danger ml-2">*</span></label>
-                        <select required name="type" onchange="typeDropDown(this.value)" class="form-control mb-3">
-                          <option value="">--Select--</option>
-                          <option value="1">All</option>
-                          <option value="2">By Single Date</option>
-                          <option value="3">By Date Range</option>
+                          ?>
                         </select>
                       </div>
                     </div>
-                    <?php
-                    echo "<div id='txtHint'></div>";
-                    ?>
-                    <!-- <div class="form-group row mb-3">
-                        <div class="col-xl-6">
-                        <label class="form-control-label">Select Student<span class="text-danger ml-2">*</span></label>
-                        
-                        </div>
-                        <div class="col-xl-6">
-                        <label class="form-control-label">Type<span class="text-danger ml-2">*</span></label>
-                        
-                        </div>
-                    </div> -->
-                    <button type="submit" name="view" class="btn btn-primary">View Attendance</button>
+                    <div class="form-group row mb-3">
+                      <div class="col-xl-6">
+                        <label for="dateRangeOption">Date Range:</label>
+                        <select class="form-control" name="dateRangeOption" id="dateRangeOption" required>
+                          <option value="all">All Dates</option>
+                          <option value="range">Specific Range</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group row mb-3 dateRangeFields" style="display: none;">
+                      <div class="col-xl-6">
+                        <label for="startDate">Start Date:</label>
+                        <input type="date" class="form-control" name="startDate" id="startDate">
+                      </div>
+                      <div class="col-xl-6">
+                        <label for="endDate">End Date:</label>
+                        <input type="date" class="form-control" name="endDate" id="endDate">
+                      </div>
+                    </div>
+                    <div class="form-group row mb-3">
+                      <div class="col-xl-2">
+                        <button type="submit" class="btn btn-primary" id="viewAttendanceBtn">
+                          View Attendance
+                        </button>
+                      </div>
+                      <div class="col-xl-2">
+                        <button type="button" class="btn btn-primary" id="downloadBtn">
+                          Download Attendance
+                        </button>
+                      </div>
+                    </div>
                   </form>
                 </div>
-              </div>
 
-              <!-- Input Group -->
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="card mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                      <h6 class="m-0 font-weight-bold text-primary">Class Attendance</h6>
-                    </div>
-                    <div class="table-responsive p-3">
-                      <table class="table align-items-center table-flush table-hover" id="dataTableHover">
-                        <thead class="thead-light">
-                          <tr>
-                            <th>#</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Other Name</th>
-                            <th>Admission No</th>
-                            <th>Class</th>
-                            <th>Class Arm</th>
-                            <th>Session</th>
-                            <th>Term</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                          </tr>
-                        </thead>
-
-                        <tbody>
-
-                          <?php
-
-                          if (isset($_POST['view'])) {
-
-                            $admissionNumber = $_POST['admissionNumber'];
-                            $type = $_POST['type'];
-
-                            if ($type == "1") { //All Attendance
-                          
-                              $query = "SELECT tblattendance.Id,tblattendance.status,tblattendance.dateTimeTaken,tblclass.className,
-                        tblclassarms.classArmName,tblsessionterm.sessionName,tblsessionterm.termId,tblterm.termName,
-                        tblstudents.firstName,tblstudents.lastName,tblstudents.otherName,tblstudents.admissionNumber
-                        FROM tblattendance
-                        INNER JOIN tblclass ON tblclass.Id = tblattendance.classId
-                        INNER JOIN tblclassarms ON tblclassarms.Id = tblattendance.classArmId
-                        INNER JOIN tblsessionterm ON tblsessionterm.Id = tblattendance.sessionTermId
-                        INNER JOIN tblterm ON tblterm.Id = tblsessionterm.termId
-                        INNER JOIN tblstudents ON tblstudents.admissionNumber = tblattendance.admissionNo
-                        where tblattendance.admissionNo = '$admissionNumber' and tblattendance.classId = '$_SESSION[classId]' and tblattendance.classArmId = '$_SESSION[classArmId]'";
-
-                            }
-                            if ($type == "2") { //Single Date Attendance
-                          
-                              $singleDate = $_POST['singleDate'];
-
-                              $query = "SELECT tblattendance.Id,tblattendance.status,tblattendance.dateTimeTaken,tblclass.className,
-                        tblclassarms.classArmName,tblsessionterm.sessionName,tblsessionterm.termId,tblterm.termName,
-                        tblstudents.firstName,tblstudents.lastName,tblstudents.otherName,tblstudents.admissionNumber
-                        FROM tblattendance
-                        INNER JOIN tblclass ON tblclass.Id = tblattendance.classId
-                        INNER JOIN tblclassarms ON tblclassarms.Id = tblattendance.classArmId
-                        INNER JOIN tblsessionterm ON tblsessionterm.Id = tblattendance.sessionTermId
-                        INNER JOIN tblterm ON tblterm.Id = tblsessionterm.termId
-                        INNER JOIN tblstudents ON tblstudents.admissionNumber = tblattendance.admissionNo
-                        where tblattendance.dateTimeTaken = '$singleDate' and tblattendance.admissionNo = '$admissionNumber' and tblattendance.classId = '$_SESSION[classId]' and tblattendance.classArmId = '$_SESSION[classArmId]'";
-
-
-                            }
-                            if ($type == "3") { //Date Range Attendance
-                          
-                              $fromDate = $_POST['fromDate'];
-                              $toDate = $_POST['toDate'];
-
-                              $query = "SELECT tblattendance.Id,tblattendance.status,tblattendance.dateTimeTaken,tblclass.className,
-                        tblclassarms.classArmName,tblsessionterm.sessionName,tblsessionterm.termId,tblterm.termName,
-                        tblstudents.firstName,tblstudents.lastName,tblstudents.otherName,tblstudents.admissionNumber
-                        FROM tblattendance
-                        INNER JOIN tblclass ON tblclass.Id = tblattendance.classId
-                        INNER JOIN tblclassarms ON tblclassarms.Id = tblattendance.classArmId
-                        INNER JOIN tblsessionterm ON tblsessionterm.Id = tblattendance.sessionTermId
-                        INNER JOIN tblterm ON tblterm.Id = tblsessionterm.termId
-                        INNER JOIN tblstudents ON tblstudents.admissionNumber = tblattendance.admissionNo
-                        where tblattendance.dateTimeTaken between '$fromDate' and '$toDate' and tblattendance.admissionNo = '$admissionNumber' and tblattendance.classId = '$_SESSION[classId]' and tblattendance.classArmId = '$_SESSION[classArmId]'";
-
-                            }
-
-                            $rs = $conn->query($query);
-                            $num = $rs->num_rows;
-                            $sn = 0;
-                            $status = "";
-                            if ($num > 0) {
-                              while ($rows = $rs->fetch_assoc()) {
-                                if ($rows['status'] == '1') {
-                                  $status = "Present";
-                                  $colour = "#00FF00";
-                                } else {
-                                  $status = "Absent";
-                                  $colour = "#FF0000";
-                                }
-                                $sn = $sn + 1;
-                                echo "
-                              <tr>
-                                <td>" . $sn . "</td>
-                                 <td>" . $rows['firstName'] . "</td>
-                                <td>" . $rows['lastName'] . "</td>
-                                <td>" . $rows['otherName'] . "</td>
-                                <td>" . $rows['admissionNumber'] . "</td>
-                                <td>" . $rows['className'] . "</td>
-                                <td>" . $rows['classArmName'] . "</td>
-                                <td>" . $rows['sessionName'] . "</td>
-                                <td>" . $rows['termName'] . "</td>
-                                <td style='background-color:" . $colour . "'>" . $status . "</td>
-                                <td>" . $rows['dateTimeTaken'] . "</td>
-                              </tr>";
-                              }
-                            } else {
-                              echo
-                                "<div class='alert alert-danger' role='alert'>
-                            No Record Found!
-                            </div>";
-                            }
-                          }
-                          ?>
-                        </tbody>
-                      </table>
+                <!-- Input Group -->
+                <div class="modal fade" id="attendanceModal" tabindex="-1" role="dialog"
+                  aria-labelledby="attendanceModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header bg-navbar">
+                        <h5 class="modal-title text-primary" id="attendanceModalLabel">Class Attendance</h5>
+                        <button type="button" class="close text-primary" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>First Name</th>
+                              <th>Last Name</th>
+                              <th>Middle Name</th>
+                              <th>Admission No</th>
+                              <th>Class</th>
+                              <th>Class Arm</th>
+                              <th>Session</th>
+                              <th>Term</th>
+                              <th>Status</th>
+                              <th>Date</th>
+                            </tr>
+                          </thead>
+                          <tbody id="attendanceTableBody">
+                            <!-- Attendance data will be dynamically inserted here -->
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <!--Row-->
-
-            <!-- Documentation Link -->
-            <!-- <div class="row">
-            <div class="col-lg-12 text-center">
-              <p>For more documentations you can visit<a href="https://getbootstrap.com/docs/4.3/components/forms/"
-                  target="_blank">
-                  bootstrap forms documentations.</a> and <a
-                  href="https://getbootstrap.com/docs/4.3/components/input-group/" target="_blank">bootstrap input
-                  groups documentations</a></p>
-            </div>
-          </div> -->
-
           </div>
-          <!---Container Fluid-->
         </div>
-        <!-- Footer -->
-        <?php include "Includes/footer.php"; ?>
-        <!-- Footer -->
       </div>
     </div>
+  </div>
+  <!-- Footer -->
+  <?php include "Includes/footer.php"; ?>
 
-    <!-- Scroll to top -->
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fas fa-angle-up"></i>
-    </a>
+  <!-- Scroll to top -->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
 
-    <script src="../vendor/jquery/jquery.min.js"></script>
-    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="js/ruang-admin.min.js"></script>
-    <!-- Page level plugins -->
-    <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+  <script src="../vendor/jquery/jquery.min.js"></script>
+  <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="js/ruang-admin.min.js"></script>
+  <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-    <!-- Page level custom scripts -->
-    <script>
-      $(document).ready(function () {
-        $('#dataTable').DataTable(); // ID From dataTable 
-        $('#dataTableHover').DataTable(); // ID From dataTable with Hover
+  <!-- Modal Script -->
+  <script>
+    $(document).ready(function () {
+      // Show/hide date range fields based on selection
+      $('#dateRangeOption').change(function () {
+        var option = $(this).val();
+        if (option === 'range') {
+          $('.dateRangeFields').show();
+        } else {
+          $('.dateRangeFields').hide();
+        }
       });
-    </script>
+
+      $('#attendanceForm').submit(function (event) {
+        event.preventDefault();
+        var studentId = $('#studentSelect').val();
+        var dateRangeOption = $('#dateRangeOption').val();
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
+
+        $.ajax({
+          type: 'POST',
+          url: '<?php echo $_SERVER["PHP_SELF"]; ?>',
+          data: {
+            viewAttendance: true,
+            student: studentId,
+            dateRangeOption: dateRangeOption,
+            startDate: startDate,
+            endDate: endDate
+          },
+          success: function (response) {
+            var attendanceData = JSON.parse(response);
+            var tableBody = $('#attendanceTableBody');
+            tableBody.empty();
+
+            if (attendanceData.length > 0) {
+              var rows = '';
+              $.each(attendanceData, function (index, data) {
+                var statusColor = data.status === 'Present' ? 'green' : 'red';
+
+                rows += `
+                <tr>
+                  <td>${index + 1}</td>
+                  <td>${data.firstName}</td>
+                  <td>${data.lastName}</td>
+                  <td>${data.otherName}</td>
+                  <td>${data.admissionNumber}</td>
+                  <td>${data.className}</td>
+                  <td>${data.classArmName}</td>
+                  <td>${data.sessionName}</td>
+                  <td>${data.termName}</td>
+                  <td style="color: ${statusColor}">${data.status}</td>
+                  <td>${data.dateTimeTaken}</td>
+                </tr>
+              `;
+              });
+              tableBody.html(rows);
+              $('#attendanceModal').modal('show');
+            } else {
+              var noDataMessage = $('<tr>').append($('<td colspan="11">').text('No attendance data found.'));
+              tableBody.append(noDataMessage);
+            }
+          },
+          error: function () {
+            console.log('Error retrieving attendance data.');
+          }
+        });
+      });
+
+      $('#downloadBtn').click(function () {
+        var studentId = $('#studentSelect').val();
+        var dateRangeOption = $('#dateRangeOption').val();
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
+        
+        $.ajax({
+          type: 'POST',
+          url: 'generateAttendanceExcel.php',
+          data: {
+            downloadAttendance: true,
+            student: studentId,
+            dateRangeOption: dateRangeOption,
+            startDate: startDate,
+            endDate: endDate
+          },
+          success: function (data) {
+            var blob = new Blob([data], { type: 'application/vnd.ms-excel' });
+            var downloadUrl = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = 'Attendance_List_' + new Date().toISOString().slice(0, 19).replace(/:/g, "") + '.xls';
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(downloadUrl);
+          },
+          error: function () {
+            console.log('Error downloading attendance record.');
+          }
+        });
+      });
+    });
+  </script>
 </body>
 
 </html>
