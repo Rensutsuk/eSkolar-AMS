@@ -2,7 +2,6 @@
 include '../Includes/dbcon.php';
 include '../Includes/session.php';
 
-
 $query = "SELECT tblclass.className,tblclassarms.classArmName 
     FROM tblclassteacher
     INNER JOIN tblclass ON tblclass.Id = tblclassteacher.classId
@@ -12,8 +11,6 @@ $query = "SELECT tblclass.className,tblclassarms.classArmName
 $rs = $conn->query($query);
 $num = $rs->num_rows;
 $rrw = $rs->fetch_assoc();
-
-
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +22,7 @@ $rrw = $rs->fetch_assoc();
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link href="img/logo/attnlg.jpg" rel="icon">
+  <link href="img/logo/attnlg.png" rel="icon">
   <title>Dashboard</title>
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -38,7 +35,6 @@ $rrw = $rs->fetch_assoc();
       <div id="content">
         <!-- TopBar -->
         <?php include "Includes/topbar.php"; ?>
-        <!-- Topbar -->
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
           <div class="card-header bg-navbar py-3 d-flex flex-row align-items-center justify-content-between">
@@ -48,7 +44,6 @@ $rrw = $rs->fetch_assoc();
           </div>
 
           <div class="row mb-3">
-            <!-- New User Card Example -->
             <?php
             $query1 = mysqli_query($conn, "SELECT * from tblstudents where classId = '$_SESSION[classId]' and classArmId = '$_SESSION[classArmId]'");
             $students = mysqli_num_rows($query1);
@@ -63,8 +58,6 @@ $rrw = $rs->fetch_assoc();
                         <?php echo $students; ?>
                       </div>
                       <div class="mt-2 mb-0 text-muted text-xs">
-                        <!-- <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 20.4%</span>
-                        <span>Since last month</span> -->
                       </div>
                     </div>
                     <div class="col-auto">
@@ -74,7 +67,6 @@ $rrw = $rs->fetch_assoc();
                 </div>
               </div>
             </div>
-            <!-- Earnings (Monthly) Card Example -->
             <?php
             $query1 = mysqli_query($conn, "SELECT * from tblclass");
             $class = mysqli_num_rows($query1);
@@ -89,8 +81,6 @@ $rrw = $rs->fetch_assoc();
                         <?php echo $class; ?>
                       </div>
                       <div class="mt-2 mb-0 text-muted text-xs">
-                        <!-- <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                        <span>Since last month</span> -->
                       </div>
                     </div>
                     <div class="col-auto">
@@ -115,8 +105,6 @@ $rrw = $rs->fetch_assoc();
                         <?php echo $classArms; ?>
                       </div>
                       <div class="mt-2 mb-0 text-muted text-xs">
-                        <!-- <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 12%</span>
-                        <span>Since last years</span> -->
                       </div>
                     </div>
                     <div class="col-auto">
@@ -142,8 +130,6 @@ $rrw = $rs->fetch_assoc();
                         <?php echo $totAttendance; ?>
                       </div>
                       <div class="mt-2 mb-0 text-muted text-xs">
-                        <!-- <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 1.10%</span>
-                        <span>Since yesterday</span> -->
                       </div>
                     </div>
                     <div class="col-auto">
@@ -153,22 +139,10 @@ $rrw = $rs->fetch_assoc();
                 </div>
               </div>
             </div>
-
-            <!--Row-->
-
-            <!-- <div class="row">
-            <div class="col-lg-12 text-center">
-              <p>Do you like this template ? you can download from <a href="https://github.com/indrijunanda/RuangAdmin"
-                  class="btn btn-primary btn-sm" target="_blank"><i class="fab fa-fw fa-github"></i>&nbsp;GitHub</a></p>
-            </div>
-          </div> -->
-
           </div>
-          <!---Container Fluid-->
         </div>
         <!-- Footer -->
         <?php include 'includes/footer.php'; ?>
-        <!-- Footer -->
       </div>
     </div>
 

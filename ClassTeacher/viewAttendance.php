@@ -63,18 +63,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['dateTaken'])) {
       <div id="content">
         <!-- TopBar -->
         <?php include "Includes/topbar.php"; ?>
-        <!-- Topbar -->
 
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
           <div class="row">
             <div class="col-lg-12">
-              <!-- Form Basic -->
               <div class="card mb-4">
                 <div class="card-header bg-navbar py-3 d-flex flex-row align-items-center justify-content-between">
                   <h1 class="h5 mb-0 text-primary">View Class Attendance</h1>
                 </div>
-                <!-- Form Input -->
                 <div class="card-body">
                   <form id="attendanceForm" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                     <div class="form-group row mb-3">
@@ -143,7 +140,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['dateTaken'])) {
   </div>
   <!-- Footer -->
   <?php include "Includes/footer.php"; ?>
-  <!-- Footer -->
 
   <!-- Scroll to top -->
   <a class="scroll-to-top rounded" href="#page-top">
@@ -154,11 +150,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['dateTaken'])) {
   <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="js/ruang-admin.min.js"></script>
-  <!-- Page level plugins -->
   <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
   <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-  <!-- Page level custom scripts -->
+  <!-- Modal Script -->
   <script>
     $(document).ready(function () {
       $('#attendanceForm').submit(function (event) {
@@ -199,7 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['dateTaken'])) {
               `;
                 });
                 tableBody.html(rows);
-                $('#attendanceTable').DataTable().destroy(); // Destroy existing DataTable (if any)
+                $('#attendanceTable').DataTable().destroy();
                 $('#attendanceTable').DataTable({
                   "lengthMenu": [10, 25, 50, 75, 100],
                   "pageLength": 10,
@@ -225,13 +220,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['dateTaken'])) {
 
   <!-- Download -->
   <script>
-    // JavaScript code to add dateTaken parameter to the Download Attendance button URL
     document.getElementById('downloadBtn').addEventListener('click', function (event) {
-      event.preventDefault(); // Prevent the default link behavior
+      event.preventDefault();
 
-      var dateTaken = document.getElementById('dateInput').value; // Get the dateTaken value from the input field
-      var downloadLink = "downloadRecord.php?dateTaken=" + encodeURIComponent(dateTaken); // Construct the download link with the dateTaken parameter
-      window.open(downloadLink, '_blank'); // Open the link in a new tab
+      var dateTaken = document.getElementById('dateInput').value;
+      var downloadLink = "downloadRecord.php?dateTaken=" + encodeURIComponent(dateTaken);
+      window.open(downloadLink, '_blank');
     });
   </script>
 </body>
