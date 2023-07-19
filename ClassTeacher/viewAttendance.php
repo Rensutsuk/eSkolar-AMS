@@ -1,8 +1,5 @@
 <?php
 // error_reporting(0);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 include '../Includes/dbcon.php';
 include '../Includes/session.php';
 
@@ -94,7 +91,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['dateTaken'])) {
                         </button>
                       </div>
                       <div class="col-xl-2">
-                        <a href="downloadRecord.php" class="btn btn-primary" target="_blank">Download Attendance</a>
+                        <a href="downloadRecord.php" class="btn btn-primary" target="_blank" id="downloadBtn">Download
+                          Attendance</a>
                       </div>
                     </div>
                   </form>
@@ -222,6 +220,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['dateTaken'])) {
           $('#attendanceModal').modal('hide');
         }
       });
+    });
+  </script>
+
+  <!-- Download -->
+  <script>
+    // JavaScript code to add dateTaken parameter to the Download Attendance button URL
+    document.getElementById('downloadBtn').addEventListener('click', function (event) {
+      event.preventDefault(); // Prevent the default link behavior
+
+      var dateTaken = document.getElementById('dateInput').value; // Get the dateTaken value from the input field
+      var downloadLink = "downloadRecord.php?dateTaken=" + encodeURIComponent(dateTaken); // Construct the download link with the dateTaken parameter
+      window.open(downloadLink, '_blank'); // Open the link in a new tab
     });
   </script>
 </body>
