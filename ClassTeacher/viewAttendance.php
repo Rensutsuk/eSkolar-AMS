@@ -82,14 +82,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['dateTaken'])) {
                     </div>
                     <div class="form-group row mb-3">
                       <div class="col-xl-2">
-                        <button type="submit" class="btn btn-primary" data-toggle="modal"
-                          data-target="#attendanceModal">
+                        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#attendanceModal"
+                          id="viewAttendanceBtn" disabled>
                           View Attendance
                         </button>
                       </div>
                       <div class="col-xl-2">
-                        <a href="downloadRecord.php" class="btn btn-primary" target="_blank" id="downloadBtn">Download
-                          Attendance</a>
+                        <a href="downloadRecord.php" class="btn btn-primary" target="_blank" id="downloadBtn" disabled>
+                          Download Attendance
+                        </a>
                       </div>
                     </div>
                   </form>
@@ -226,6 +227,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['dateTaken'])) {
       var dateTaken = document.getElementById('dateInput').value;
       var downloadLink = "downloadRecord.php?dateTaken=" + encodeURIComponent(dateTaken);
       window.open(downloadLink, '_blank');
+    });
+  </script>
+
+  <!-- Buttons -->
+  <script>
+    // Enable or disable buttons based on the input date
+    document.getElementById('dateInput').addEventListener('input', function () {
+      var dateInputValue = this.value;
+      var viewAttendanceBtn = document.getElementById('viewAttendanceBtn');
+      var downloadBtn = document.getElementById('downloadBtn');
+
+      if (dateInputValue.trim() !== '') {
+        viewAttendanceBtn.removeAttribute('disabled');
+        downloadBtn.removeAttribute('disabled');
+      } else {
+        viewAttendanceBtn.setAttribute('disabled', 'disabled');
+        downloadBtn.setAttribute('disabled', 'disabled');
+      }
     });
   </script>
 </body>
