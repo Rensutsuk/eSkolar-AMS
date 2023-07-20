@@ -171,45 +171,42 @@ if (isset($_GET['Id']) && isset($_GET['classArmId']) && isset($_GET['action']) &
         <div class="container-fluid" id="container-wrapper">
           <div class="row">
             <div class="col-lg-12">
-              <!-- Input Group -->
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="card mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                      <h1 class="h3 mb-0 text-gray-800">Class Teachers</h1>
-                    </div>
-                    <div class="table-responsive p-3">
-                      <table class="table align-items-center table-flush table-hover" id="dataTableHover">
-                        <thead class="thead-light">
-                          <tr>
-                            <th>#</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Email Address</th>
-                            <th>Phone No</th>
-                            <th>Class</th>
-                            <th>Class Arm</th>
-                            <th>Date Created</th>
-                            <th>Delete</th>
-                          </tr>
-                        </thead>
+              <div class="card mb-4">
+                <div class="card-header bg-navbar py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h1 class="h5 mb-0 text-primary">Class Teacher</h1>
+                </div>
+                <div class="table-responsive p-3">
+                  <table class="table align-items-center table-flush table-hover" id="dataTableHover">
+                    <thead class="thead-light">
+                      <tr>
+                        <th>#</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email Address</th>
+                        <th>Phone No</th>
+                        <th>Class</th>
+                        <th>Class Arm</th>
+                        <th>Date Created</th>
+                        <th>Delete</th>
+                      </tr>
+                    </thead>
 
-                        <tbody>
+                    <tbody>
 
-                          <?php
-                          $query = "SELECT tblclassteacher.Id,tblclass.className,tblclassarms.classArmName,tblclassarms.Id AS classArmId,tblclassteacher.firstName,
+                      <?php
+                      $query = "SELECT tblclassteacher.Id,tblclass.className,tblclassarms.classArmName,tblclassarms.Id AS classArmId,tblclassteacher.firstName,
                       tblclassteacher.lastName,tblclassteacher.emailAddress,tblclassteacher.phoneNo,tblclassteacher.dateCreated
                       FROM tblclassteacher
                       INNER JOIN tblclass ON tblclass.Id = tblclassteacher.classId
                       INNER JOIN tblclassarms ON tblclassarms.Id = tblclassteacher.classArmId";
-                          $rs = $conn->query($query);
-                          $num = $rs->num_rows;
-                          $sn = 0;
-                          $status = "";
-                          if ($num > 0) {
-                            while ($rows = $rs->fetch_assoc()) {
-                              $sn = $sn + 1;
-                              echo "
+                      $rs = $conn->query($query);
+                      $num = $rs->num_rows;
+                      $sn = 0;
+                      $status = "";
+                      if ($num > 0) {
+                        while ($rows = $rs->fetch_assoc()) {
+                          $sn = $sn + 1;
+                          echo "
                               <tr>
                               <td>" . $sn . "</td>
                               <td>" . $rows['firstName'] . "</td>
@@ -221,81 +218,72 @@ if (isset($_GET['Id']) && isset($_GET['classArmId']) && isset($_GET['action']) &
                               <td>" . $rows['dateCreated'] . "</td>
                               <td><a href='?action=delete&Id=" . $rows['Id'] . "&classArmId=" . $rows['classArmId'] . "'><i class='fas fa-fw fa-trash'></i></a></td>
                               </tr>";
-                            }
-                          } else {
-                            echo
-                              "<div class='alert alert-danger' role='alert'>
+                        }
+                      } else {
+                        echo
+                          "<div class='alert alert-danger' role='alert'>
                             No Record Found!
                             </div>";
-                          }
+                      }
 
-                          ?>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div class="card-footer align-items-right justify-content-between">
-                      <!-- Button trigger modal -->
-                      <div class="d-grid gap-1 d-md-flex justify-content-md-end">
-                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
-                          data-target="#addTeacher"> Add
-                        </button>
-                      </div>
-                      <!-- Modal -->
-                      <div class="modal fade" id="addTeacher" tabindex="-1" role="dialog"
-                        aria-labelledby="teacherAddTriger" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title">Add Teacher</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <form method="post">
-                              <div class="modal-body">
-                                <label class="form-control-label">Firstname<span
-                                    class="text-danger ml-2">*</span></label>
-                                <input type="text" class="form-control" required name="firstName"
-                                  value="<?php echo $row['firstName']; ?>" id="exampleInputFirstName">
-                                <label class="form-control-label">Lastname<span
-                                    class="text-danger ml-2">*</span></label>
-                                <input type="text" class="form-control" required name="lastName"
-                                  value="<?php echo $row['lastName']; ?>" id="exampleInputFirstName">
-                                <label class="form-control-label">Email Address<span
-                                    class="text-danger ml-2">*</span></label>
-                                <input type="email" class="form-control" required name="emailAddress"
-                                  value="<?php echo $row['emailAddress']; ?>" id="exampleInputFirstName">
-                                <label class="form-control-label">Phone No<span
-                                    class="text-danger ml-2">*</span></label>
-                                <input type="text" class="form-control" name="phoneNo"
-                                  value="<?php echo $row['phoneNo']; ?>" id="exampleInputFirstName">
-                                <label class="form-control-label">Select Class<span
-                                    class="text-danger ml-2">*</span></label>
-                                <?php
-                                $qry = "SELECT * FROM tblclass ORDER BY className ASC";
-                                $result = $conn->query($qry);
-                                $num = $result->num_rows;
-                                if ($num > 0) {
-                                  echo ' <select required name="classId" onchange="classArmDropdown(this.value)" class="form-control mb-3">';
-                                  echo '<option value="">--Select Class--</option>';
-                                  while ($rows = $result->fetch_assoc()) {
-                                    echo '<option value="' . $rows['Id'] . '" >' . $rows['className'] . '</option>';
-                                  }
-                                  echo '</select>';
-                                }
-                                ?>
-                                <label class="form-control-label">Class Arm<span
-                                    class="text-danger ml-2">*</span></label>
-                                <?php
-                                echo "<div id='txtHint'></div>";
-                                ?>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" name="save" class="btn btn-primary">Save</button>
-                            </form>
-                          </div>
+                      ?>
+                    </tbody>
+                  </table>
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTeacher"> Add
+                    Teacher
+                  </button>
+                </div>
+                <div class="card-footer align-items-right justify-content-between">
+                  <!-- Modal -->
+                  <div class="modal fade" id="addTeacher" tabindex="-1" role="dialog" aria-labelledby="teacherAddTriger"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Add Teacher</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
                         </div>
+                        <form method="post">
+                          <div class="modal-body">
+                            <label class="form-control-label">Firstname<span class="text-danger ml-2">*</span></label>
+                            <input type="text" class="form-control" required name="firstName"
+                              value="<?php echo $row['firstName']; ?>" id="exampleInputFirstName">
+                            <label class="form-control-label">Lastname<span class="text-danger ml-2">*</span></label>
+                            <input type="text" class="form-control" required name="lastName"
+                              value="<?php echo $row['lastName']; ?>" id="exampleInputFirstName">
+                            <label class="form-control-label">Email Address<span
+                                class="text-danger ml-2">*</span></label>
+                            <input type="email" class="form-control" required name="emailAddress"
+                              value="<?php echo $row['emailAddress']; ?>" id="exampleInputFirstName">
+                            <label class="form-control-label">Phone No<span class="text-danger ml-2">*</span></label>
+                            <input type="text" class="form-control" name="phoneNo"
+                              value="<?php echo $row['phoneNo']; ?>" id="exampleInputFirstName">
+                            <label class="form-control-label">Select Class<span
+                                class="text-danger ml-2">*</span></label>
+                            <?php
+                            $qry = "SELECT * FROM tblclass ORDER BY className ASC";
+                            $result = $conn->query($qry);
+                            $num = $result->num_rows;
+                            if ($num > 0) {
+                              echo ' <select required name="classId" onchange="classArmDropdown(this.value)" class="form-control mb-3">';
+                              echo '<option value="">--Select Class--</option>';
+                              while ($rows = $result->fetch_assoc()) {
+                                echo '<option value="' . $rows['Id'] . '" >' . $rows['className'] . '</option>';
+                              }
+                              echo '</select>';
+                            }
+                            ?>
+                            <label class="form-control-label">Class Arm<span class="text-danger ml-2">*</span></label>
+                            <?php
+                            echo "<div id='txtHint'></div>";
+                            ?>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" name="save" class="btn btn-primary">Save</button>
+                        </form>
                       </div>
                     </div>
                   </div>
@@ -303,26 +291,11 @@ if (isset($_GET['Id']) && isset($_GET['classArmId']) && isset($_GET['action']) &
               </div>
             </div>
           </div>
-          <!--Row-->
-
-          <!-- Documentation Link -->
-          <!-- <div class="row">
-            <div class="col-lg-12 text-center">
-              <p>For more documentations you can visit<a href="https://getbootstrap.com/docs/4.3/components/forms/"
-                  target="_blank">
-                  bootstrap forms documentations.</a> and <a
-                  href="https://getbootstrap.com/docs/4.3/components/input-group/" target="_blank">bootstrap input
-                  groups documentations</a></p>
-            </div>
-          </div> -->
-
         </div>
-        <!---Container Fluid-->
       </div>
-      <!-- Footer -->
-      <?php include "Includes/footer.php"; ?>
-      <!-- Footer -->
     </div>
+    <!-- Footer -->
+    <?php include "Includes/footer.php"; ?>
   </div>
 
   <!-- Scroll to top -->

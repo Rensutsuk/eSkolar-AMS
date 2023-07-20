@@ -3,79 +3,6 @@
 error_reporting(0);
 include '../Includes/dbcon.php';
 include '../Includes/session.php';
-
-//------------------------SAVE--------------------------------------------------
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-  if (isset($_POST['save'])) {
-    // Code for creating a new student
-    $firstName = $_POST['firstName'];
-    $lastName = $_POST['lastName'];
-    $otherName = $_POST['otherName'];
-    $admissionNumber = $_POST['admissionNumber'];
-    $classId = $_POST['classId'];
-    $classArmId = $_POST['classArmId'];
-    $dateCreated = date("Y-m-d");
-
-    $query = mysqli_query($conn, "select * from tblstudents where admissionNumber ='$admissionNumber'");
-    $ret = mysqli_fetch_array($query);
-
-    if ($ret > 0) {
-      $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>This Email Address Already Exists!</div>";
-    } else {
-      $query = mysqli_query($conn, "insert into tblstudents(firstName,lastName,otherName,admissionNumber,password,classId,classArmId,dateCreated) 
-      value('$firstName','$lastName','$otherName','$admissionNumber','12345','$classId','$classArmId','$dateCreated')");
-
-      if ($query) {
-        $statusMsg = "<div class='alert alert-success'  style='margin-right:700px;'>Created Successfully!</div>";
-      } else {
-        $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
-      }
-    }
-
-  } elseif (isset($_POST['update'])) {
-    // Code for updating a student
-    $firstName = $_POST['firstName'];
-    $lastName = $_POST['lastName'];
-    $otherName = $_POST['otherName'];
-    $admissionNumber = $_POST['admissionNumber'];
-    $classId = $_POST['classId'];
-    $classArmId = $_POST['classArmId'];
-    $dateCreated = date("Y-m-d");
-    $Id = $_POST['studentId'];
-
-    $query = mysqli_query($conn, "update tblstudents set firstName='$firstName', lastName='$lastName',
-    otherName='$otherName', admissionNumber='$admissionNumber',password='12345', classId='$classId',classArmId='$classArmId'
-    where Id='$Id'");
-
-    if ($query) {
-      echo "<script type='text/javascript'>
-              window.location = ('createStudents.php')
-            </script>";
-    } else {
-      $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
-    }
-  }
-}
-
-//--------------------------------DELETE------------------------------------------------------------------
-
-if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete") {
-  // Code for deleting a student
-  $Id = $_GET['Id'];
-  $classArmId = $_GET['classArmId'];
-
-  $query = mysqli_query($conn, "DELETE FROM tblstudents WHERE Id='$Id'");
-
-  if ($query == TRUE) {
-    echo "<script type='text/javascript'>
-            window.location = ('createStudents.php')
-          </script>";
-  } else {
-    $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
-  }
-}
 ?>
 
 <!DOCTYPE html>
@@ -92,8 +19,6 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/ruang-admin.min.css" rel="stylesheet">
-
-
 
   <script>
     function classArmDropdown(str) {
@@ -141,7 +66,7 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                         <th>#</th>
                         <th>First Name</th>
                         <th>Last Name</th>
-                        <th>Other Name</th>
+                        <th>Middle Name</th>
                         <th>Admission No</th>
                         <th>Class</th>
                         <th>Class Arm</th>
@@ -155,10 +80,10 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
 
                       <?php
                       $query = "SELECT tblstudents.Id,tblclass.className,tblclassarms.classArmName,tblclassarms.Id AS classArmId,tblstudents.firstName,
-                      tblstudents.lastName,tblstudents.otherName,tblstudents.admissionNumber,tblstudents.dateCreated
-                      FROM tblstudents
-                      INNER JOIN tblclass ON tblclass.Id = tblstudents.classId
-                      INNER JOIN tblclassarms ON tblclassarms.Id = tblstudents.classArmId";
+          tblstudents.lastName,tblstudents.otherName,tblstudents.admissionNumber,tblstudents.dateCreated
+          FROM tblstudents
+          INNER JOIN tblclass ON tblclass.Id = tblstudents.classId
+          INNER JOIN tblclassarms ON tblclassarms.Id = tblstudents.classArmId";
                       $rs = $conn->query($query);
                       $num = $rs->num_rows;
                       $sn = 0;
@@ -167,32 +92,105 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                         while ($rows = $rs->fetch_assoc()) {
                           $sn = $sn + 1;
                           echo "
-                              <tr>
-                                <td>" . $sn . "</td>
-                                <td>" . $rows['firstName'] . "</td>
-                                <td>" . $rows['lastName'] . "</td>
-                                <td>" . $rows['otherName'] . "</td>
-                                <td>" . $rows['admissionNumber'] . "</td>
-                                <td>" . $rows['className'] . "</td>
-                                <td>" . $rows['classArmName'] . "</td>
-                                 <td>" . $rows['dateCreated'] . "</td>
-                                <td><a href='?action=edit&Id=" . $rows['Id'] . "'><i class='fas fa-fw fa-edit'></i></a></td>
-                                <td><a href='?action=delete&Id=" . $rows['Id'] . "'><i class='fas fa-fw fa-trash'></i></a></td>
-                              </tr>";
+                            <tr>
+                              <td>" . $sn . "</td>
+                              <td>" . $rows['firstName'] . "</td>
+                              <td>" . $rows['lastName'] . "</td>
+                              <td>" . $rows['otherName'] . "</td>
+                              <td>" . $rows['admissionNumber'] . "</td>
+                              <td>" . $rows['className'] . "</td>
+                              <td>" . $rows['classArmName'] . "</td>
+                              <td>" . $rows['dateCreated'] . "</td>
+                              <td>
+                                <a href='#' onclick='openEditModal(\"" . $rows['Id'] . "\", \"" . $rows['firstName'] . "\", \"" . $rows['lastName'] . "\", \"" . $rows['otherName'] . "\", \"" . $rows['classId'] . "\", \"" . $rows['classArmId'] . "\")'>
+                                  <i class='fas fa-fw fa-edit'></i>
+                                </a>
+                              </td>
+                              <td>
+                                <a href='delete_student.php?Id=" . $rows['Id'] . "' onclick='return confirmDelete()'>
+                                  <i class='fas fa-fw fa-trash'></i>
+                                </a>
+                              </td>
+                            </tr>";
                         }
                       } else {
-                        echo
-                          "<div class='alert alert-danger' role='alert'>
-                            No Record Found!
-                            </div>";
+                        echo "<div class='alert alert-danger' role='alert'>No Record Found!</div>";
                       }
-
                       ?>
+
                     </tbody>
                   </table>
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStudentModal"
+                    id="addStudentButton">
+                    Add Student
+                  </button>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for adding/editing a student -->
+    <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-navbar">
+            <h5 class="modal-title text-primary" id="addStudentModalLabel">Add Student</h5>
+            <button type="button" class="close text-primary" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="edit_student.php" method="POST" id="addStudentForm">
+              <!-- The hidden field for storing the student ID for editing -->
+              <input type="hidden" name="studentId" id="studentId">
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" required>
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" required>
+              </div>
+              <div class="form-group">
+                <label for="otherName">Middle Name</label>
+                <input type="text" class="form-control" id="otherName" name="otherName" required>
+              </div>
+              <div class="form-group">
+                <label for="classId">Class</label>
+                <select class="form-control" id="classId" name="classId" required
+                  onchange="updateClassArmDropdown(this.value)">
+                  <option value="" disabled selected>Select Class</option>
+                  <?php
+                  // Fetch class options from the tblclass table
+                  $query = "SELECT * FROM tblclass";
+                  $result = $conn->query($query);
+                  while ($row = $result->fetch_assoc()) {
+                    echo "<option value='" . $row['Id'] . "'>" . $row['className'] . "</option>";
+                  }
+                  ?>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="classArmId">Class Arm</label>
+                <select class="form-control" id="classArmId" name="classArmId" required>
+                  <option value="" disabled selected>Select Class Arm</option>
+                </select>
+              </div>
+              <div class="form-group" hidden>
+                <label for="admissionNumber">Admission Number</label>
+                <input type="text" class="form-control" id="admissionNumber" name="admissionNumber" readonly>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" form="addStudentForm" id="modalSubmitButton">
+              Add Student <!-- Default label for the button -->
+            </button>
           </div>
         </div>
       </div>
@@ -221,6 +219,95 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
       $('#dataTable').DataTable(); // ID From dataTable 
       $('#dataTableHover').DataTable(); // ID From dataTable with Hover
     });
+  </script>
+
+  <script>
+    // JavaScript code to reset the modal fields and button label when adding a new student
+    function openAddModal() {
+      document.getElementById("addStudentModalLabel").innerHTML = "Add Student";
+      document.getElementById("addStudentForm").action = "add_student.php"; // Change the form action URL for adding
+      document.getElementById("studentId").value = ""; // Clear the student ID hidden field
+      document.getElementById("firstName").value = "";
+      document.getElementById("lastName").value = "";
+      document.getElementById("otherName").value = "";
+      document.getElementById("classId").value = "";
+      document.getElementById("classArmId").value = "";
+
+      // Set the value of the admission number input field
+      document.getElementById("admissionNumber").value = admissionNumber;
+
+      document.getElementById("modalSubmitButton").innerHTML = "Add Student"; // Change the button label for adding
+      $('#addStudentModal').modal('show');
+    }
+
+    // Add an event listener to the "Add Student" button to open the add modal and reset data
+    document.getElementById("addStudentButton").addEventListener("click", function () {
+      openAddModal();
+    });
+
+    // Add an event listener to the modal form for submitting the data
+    document.getElementById("addStudentForm").addEventListener("submit", function (event) {
+      // Generate admission number automatically with the format AMS-year-random
+      const year = new Date().getFullYear();
+      const random = Math.floor(1000 + Math.random() * 9000);
+      const admissionNumber = `AMS-${year}-${random}`;
+      document.getElementById("admissionNumber").value = admissionNumber;
+
+      // Allow the form to submit
+      return true;
+    });
+  </script>
+
+  <script>
+    // JavaScript code to pre-fill the modal fields for editing and set the button label
+    function openEditModal(Id, firstName, lastName, otherName, classId, classArmId) {
+      document.getElementById("addStudentModalLabel").innerHTML = "Edit Student";
+      document.getElementById("addStudentForm").action = "edit_student.php"; // Change the form action URL for editing
+      document.getElementById("studentId").value = Id; // Set the student ID to the hidden field for editing
+      document.getElementById("firstName").value = firstName;
+      document.getElementById("lastName").value = lastName;
+      document.getElementById("otherName").value = otherName;
+      document.getElementById("classId").value = classId;
+      document.getElementById("classArmId").value = classArmId;
+      document.getElementById("modalSubmitButton").innerHTML = "Update Student"; // Change the button label for editing
+      $('#addStudentModal').modal('show');
+    }
+  </script>
+
+  <script>
+    // JavaScript code to update class arm dropdown dynamically
+    document.addEventListener("DOMContentLoaded", function () {
+      // Fetch class arm options based on the selected class section
+      document.getElementById("classId").addEventListener("change", function () {
+        const classId = this.value;
+        const classArmDropdown = document.getElementById("classArmId");
+
+        // Clear existing options
+        classArmDropdown.innerHTML = "<option value='' disabled selected>Select Class Arm</option>";
+        classArmDropdown.disabled = true;
+
+        if (classId) {
+          // Send an AJAX request to fetch class arms for the selected class section
+          const xmlhttp = new XMLHttpRequest();
+          xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+              // Update class arm options based on the server response
+              classArmDropdown.innerHTML += this.responseText;
+              classArmDropdown.disabled = false;
+            }
+          };
+          xmlhttp.open("GET", "ajaxGetClassArms.php?classId=" + classId, true);
+          xmlhttp.send();
+        }
+      });
+    });
+  </script>
+
+  <!-- Delete -->
+  <script>
+    function confirmDelete() {
+      return confirm("Are you sure you want to delete this record?");
+    }
   </script>
 </body>
 
