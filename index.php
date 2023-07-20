@@ -49,7 +49,7 @@ $imagePath = 'img\PUP_thumbnail.png';
                 placeholder="Enter Password">
             </div>
             <div class="form-group">
-              <input type="submit" class="btn btn-success btn-block" value="Login" name="login" />
+              <input type="submit" class="btn btn-warning btn-block" value="Login" name="login" />
             </div>
           </form>
 
