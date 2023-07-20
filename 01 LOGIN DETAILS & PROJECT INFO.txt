@@ -19,3 +19,10 @@ Email   : jwood@mail.com
 Password: pass123
 
 **Default password for teacher's account: pass123**
+
+INSERT INTO tblclassteacher (Id, firstName, lastName, emailAddress, password, phoneNo, classId, classArmId, dateCreated)
+VALUES
+  (1, 'John', 'Doe', 'johndoe@gmail.com', '482c811da5d5b4bc6d497ffa98491e38', '09123456789', 1, 1, '2023-07-20'),
+  (2, 'Jane', 'Smith', 'janesmith@gmail.com', '482c811da5d5b4bc6d497ffa98491e38', '09987654321', 2, 1, '2023-07-20'),
+  (3, 'Michael', 'Garcia', 'michaelgarcia@gmail.com', '482c811da5d5b4bc6d497ffa98491e38', '09555444333', 3, 2, '2023-07-20'),
+  (4, 'Sarah', 'Lim', 'sarahlim@gmail.com', '482c811da5d5b4bc6d497ffa98491e38', '09111222333', 4, 2, '2023-07-20');

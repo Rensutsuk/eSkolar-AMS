@@ -42,7 +42,7 @@ $fullName = $rows['firstName'] . " " . $rows['lastName'];
       <button class="btn dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
         aria-expanded="false">
         <img class="img-profile rounded-circle" src="img/user-icn.png" style="max-width: 40px">
-        <span class="ml-2 d-none d-lg-inline text-white small"><b>Welcome
+        <span class="ml-2 d-none d-lg-inline text-white small"><b>Welcome,
             <?php echo $fullName; ?>
           </b></span>
       </button>

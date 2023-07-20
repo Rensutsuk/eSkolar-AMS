@@ -15,10 +15,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['dateTaken'])) {
             INNER JOIN tblsessionterm ON tblsessionterm.Id = tblattendance.sessionTermId
             INNER JOIN tblterm ON tblterm.Id = tblsessionterm.termId
             INNER JOIN tblstudents ON tblstudents.admissionNumber = tblattendance.admissionNo
-            WHERE tblattendance.dateTimeTaken = ? AND tblattendance.classId = ? AND tblattendance.classArmId = ?";
+            WHERE tblattendance.dateTimeTaken = ? 
+            AND tblattendance.classId = ? 
+            AND tblattendance.classArmId = ?
+            AND tblclass.Id = ?
+            AND tblclassarms.Id = ?";
 
   $stmt = $conn->prepare($query);
-  $stmt->bind_param("sss", $dateTaken, $_SESSION['classId'], $_SESSION['classArmId']);
+  $stmt->bind_param(
+    "sssss",
+    $dateTaken,
+    $_SESSION['classId'],
+    $_SESSION['classArmId'],
+    $_SESSION['classId'],
+    $_SESSION['classArmId']
+  );
   $stmt->execute();
   $result = $stmt->get_result();
 
@@ -157,6 +168,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['dateTaken'])) {
   <!-- Modal Script -->
   <script>
     $(document).ready(function () {
+      
+      $('#attendanceModal').on('show.bs.modal', function () {
+        // Reset the DataTable and set the scrollable height
+        $('#attendanceTable').DataTable().destroy();
+        $('#attendanceTable').DataTable({
+          "lengthMenu": [10, 25, 50, 75, 100],
+          "pageLength": 10,
+          "searching": true
+        });
+
+        // Set the modal body height and overflow
+        $('.modal-body').css({
+          "max-height": "400px", // Set the desired height for scrolling
+          "overflow-y": "scroll"
+        });
+      });
+
       $('#attendanceForm').submit(function (event) {
         event.preventDefault();
         var dateTaken = $('#dateInput').val();

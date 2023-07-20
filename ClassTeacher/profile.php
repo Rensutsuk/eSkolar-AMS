@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 							<div class="card mb-4">
 								<div class="card-header bg-navbar py-3 d-flex flex-row align-items-center justify-content-between">
 									<h1 class="h5 mb-0 text-primary">
-										<?php echo $rrw['firstName'] . ' ' . $rrw['lastName']; ?>
+										Edit Profile
 									</h1>
 								</div>
 								<div class="card-body">

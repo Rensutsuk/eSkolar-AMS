@@ -7,81 +7,66 @@ $query = "SELECT tblclass.className,tblclassarms.classArmName
     FROM tblclassteacher
     INNER JOIN tblclass ON tblclass.Id = tblclassteacher.classId
     INNER JOIN tblclassarms ON tblclassarms.Id = tblclassteacher.classArmId
-    Where tblclassteacher.Id = '$_SESSION[userId]'";
+    WHERE tblclassteacher.Id = '$_SESSION[userId]'";
 $rs = $conn->query($query);
 $num = $rs->num_rows;
 $rrw = $rs->fetch_assoc();
 
-
 //session and Term
-$querey = mysqli_query($conn, "select * from tblsessionterm where isActive ='1'");
+$querey = mysqli_query($conn, "SELECT * FROM tblsessionterm WHERE isActive ='1'");
 $rwws = mysqli_fetch_array($querey);
 $sessionTermId = $rwws['Id'];
 
 $dateTaken = date("Y-m-d");
 
-$qurty = mysqli_query($conn, "select * from tblattendance  where classId = '$_SESSION[classId]' and classArmId = '$_SESSION[classArmId]' and dateTimeTaken='$dateTaken'");
+// Check if the attendance has been taken
+$qurty = mysqli_query($conn, "SELECT * FROM tblattendance WHERE classId = '$_SESSION[classId]' AND classArmId = '$_SESSION[classArmId]' AND dateTimeTaken='$dateTaken'");
 $count = mysqli_num_rows($qurty);
 
-if ($count == 0) { //if Record does not exsit, insert the new record
+// Variable to keep track if the table should be shown or hidden
+$tableHidden = $count > 0 ? 'd-none' : '';
 
-  //insert the students record into the attendance table on page load
-  $qus = mysqli_query($conn, "select * from tblstudents  where classId = '$_SESSION[classId]' and classArmId = '$_SESSION[classArmId]'");
+// If attendance has not been taken, insert the new record for each student
+if ($count == 0) {
+  $qus = mysqli_query($conn, "SELECT * FROM tblstudents  WHERE classId = '$_SESSION[classId]' AND classArmId = '$_SESSION[classArmId]'");
   while ($ros = $qus->fetch_assoc()) {
-    $qquery = mysqli_query($conn, "insert into tblattendance(admissionNo,classId,classArmId,sessionTermId,status,dateTimeTaken) 
-              value('$ros[admissionNumber]','$_SESSION[classId]','$_SESSION[classArmId]','$sessionTermId','0','$dateTaken')");
+    $studentAdmissionNumber = $ros['admissionNumber'];
+    $existingRecordQuery = mysqli_query($conn, "SELECT * FROM tblattendance WHERE admissionNo = '$studentAdmissionNumber' AND dateTimeTaken = '$dateTaken'");
 
+    if (mysqli_num_rows($existingRecordQuery) == 0) {
+      $qquery = mysqli_query($conn, "INSERT INTO tblattendance (admissionNo, classId, classArmId, sessionTermId, status, dateTimeTaken) 
+              VALUES ('$studentAdmissionNumber','$_SESSION[classId]','$_SESSION[classArmId]','$sessionTermId','0','$dateTaken')");
+    }
   }
 }
 
-
-
-
-
-
 if (isset($_POST['save'])) {
-
   $admissionNo = $_POST['admissionNo'];
-
   $check = $_POST['check'];
   $N = count($admissionNo);
   $status = "";
 
-
-  //check if the attendance has not been taken i.e if no record has a status of 1
-  $qurty = mysqli_query($conn, "select * from tblattendance  where classId = '$_SESSION[classId]' and classArmId = '$_SESSION[classArmId]' and dateTimeTaken='$dateTaken' and status = '1'");
+  // Check if the attendance has been taken
+  $qurty = mysqli_query($conn, "SELECT * FROM tblattendance  WHERE classId = '$_SESSION[classId]' AND classArmId = '$_SESSION[classArmId]' AND dateTimeTaken='$dateTaken' AND status = '1'");
   $count = mysqli_num_rows($qurty);
 
   if ($count > 0) {
-
     $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>Attendance has been taken for today!</div>";
-
-  } else //update the status to 1 for the checkboxes checked
-  {
-
+  } else {
     for ($i = 0; $i < $N; $i++) {
-      $admissionNo[$i]; //admission Number
+      $admissionNumber = $admissionNo[$i];
 
-      if (isset($check[$i])) //the checked checkboxes
-      {
-        $qquery = mysqli_query($conn, "update tblattendance set status='1' where admissionNo = '$check[$i]'");
-
+      if (isset($check[$i])) {
+        $qquery = mysqli_query($conn, "UPDATE tblattendance SET status='1' WHERE admissionNo = '$admissionNumber'");
         if ($qquery) {
-
-          $statusMsg = "<div class='alert alert-success'  style='margin-right:700px;'>Attendance Taken Successfully!</div>";
+          $statusMsg = "<div class='alert alert-success' style='margin-right:700px;'>Attendance Taken Successfully!</div>";
         } else {
           $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
         }
-
       }
     }
   }
-
-
-
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -93,13 +78,11 @@ if (isset($_POST['save'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link href="img/logo/attnlg.jpg" rel="icon">
-  <title>Dashboard</title>
+  <link href="img/logo/attnlg.png" rel="icon">
+  <title>Take Attendance</title>
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/ruang-admin.min.css" rel="stylesheet">
-
-
 
   <script>
     function classArmDropdown(str) {
@@ -134,34 +117,24 @@ if (isset($_POST['save'])) {
         <?php include "Includes/topbar.php"; ?>
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Take Attendance (Today's Date :
-              <?php echo $todaysDate = date("m-d-Y"); ?>)
-            </h1>
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Home</a></li>
-              <li class="breadcrumb-item active" aria-current="page">All Student in Class</li>
-            </ol>
-          </div>
-
           <div class="row">
             <div class="col-lg-12">
-              <!-- Form Basic -->
-
-
               <!-- Input Group -->
               <form method="post">
                 <div class="row">
                   <div class="col-lg-12">
                     <div class="card mb-4">
-                      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">All Student in (
-                          <?php echo $rrw['className'] . ' - ' . $rrw['classArmName']; ?>) Class
-                        </h6>
-                        <h6 class="m-0 font-weight-bold text-danger">Note: <i>Click on the checkboxes besides each
-                            student to take attendance!</i></h6>
+                      <div
+                        class="card-header bg-navbar py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h1 class="h5 mb-0 text-primary">Attendance of Class
+                          <?php echo $rrw['className'] . ' - ' . $rrw['classArmName']; ?>
+                          (
+                          <?php echo $todaysDate = date("m-d-Y"); ?>)
+                        </h1>
                       </div>
-                      <div class="table-responsive p-3">
+                      <h6 class="m-3 font-weight-bold text-danger">Note: <i>Click on the checkboxes besides each
+                          student to take attendance!</i></h6>
+                      <div class="table-responsive p-3 <?php echo $tableHidden; ?>">
                         <?php echo $statusMsg; ?>
                         <table class="table align-items-center table-flush table-hover">
                           <thead class="thead-light">
@@ -218,33 +191,20 @@ if (isset($_POST['save'])) {
                         </table>
                         <br>
                         <button type="submit" name="save" class="btn btn-primary">Take Attendance</button>
+                        <!-- Display an alert if attendance is already taken -->
               </form>
             </div>
           </div>
         </div>
       </div>
+      <div class="alert alert-danger mt-4 <?php echo !$tableHidden ? 'd-none' : ''; ?>" role="alert">
+        Attendance has been taken for today!
+      </div>
     </div>
-    <!--Row-->
-
-    <!-- Documentation Link -->
-    <!-- <div class="row">
-            <div class="col-lg-12 text-center">
-              <p>For more documentations you can visit<a href="https://getbootstrap.com/docs/4.3/components/forms/"
-                  target="_blank">
-                  bootstrap forms documentations.</a> and <a
-                  href="https://getbootstrap.com/docs/4.3/components/input-group/" target="_blank">bootstrap input
-                  groups documentations</a></p>
-            </div>
-          </div> -->
-
-  </div>
-  <!---Container Fluid-->
+    <!---Container Fluid-->
   </div>
   <!-- Footer -->
   <?php include "Includes/footer.php"; ?>
-  <!-- Footer -->
-  </div>
-  </div>
 
   <!-- Scroll to top -->
   <a class="scroll-to-top rounded" href="#page-top">
