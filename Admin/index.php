@@ -25,7 +25,7 @@ $rrw = $rs->fetch_assoc();
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link href="img/logo/attnlg.jpg" rel="icon">
+  <link href="img/logo/attnlg.png" rel="icon">
   <title>Dashboard</title>
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -41,8 +41,8 @@ $rrw = $rs->fetch_assoc();
         <!-- Topbar -->
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Administrator Dashboard</h1>
+          <div class="card-header bg-navbar py-3 d-flex flex-row align-items-center justify-content-between">
+            <h1 class="h5 mb-0 text-primary">Administrator Dashboard</h1>
           </div>
 
           <div class="row mb-3">
@@ -61,8 +61,6 @@ $rrw = $rs->fetch_assoc();
                         <?php echo $students; ?>
                       </div>
                       <div class="mt-2 mb-0 text-muted text-xs">
-                        <!-- <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 20.4%</span>
-                        <span>Since last month</span> -->
                       </div>
                     </div>
                     <div class="col-auto">

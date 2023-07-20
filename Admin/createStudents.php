@@ -1,106 +1,81 @@
 <?php
+// Your database connection setup
 error_reporting(0);
 include '../Includes/dbcon.php';
 include '../Includes/session.php';
 
 //------------------------SAVE--------------------------------------------------
 
-if (isset($_POST['save'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-  $firstName = $_POST['firstName'];
-  $lastName = $_POST['lastName'];
-  $otherName = $_POST['otherName'];
-
-  $admissionNumber = $_POST['admissionNumber'];
-  $classId = $_POST['classId'];
-  $classArmId = $_POST['classArmId'];
-  $dateCreated = date("Y-m-d");
-
-  $query = mysqli_query($conn, "select * from tblstudents where admissionNumber ='$admissionNumber'");
-  $ret = mysqli_fetch_array($query);
-
-  if ($ret > 0) {
-
-    $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>This Email Address Already Exists!</div>";
-  } else {
-
-    $query = mysqli_query($conn, "insert into tblstudents(firstName,lastName,otherName,admissionNumber,password,classId,classArmId,dateCreated) 
-    value('$firstName','$lastName','$otherName','$admissionNumber','12345','$classId','$classArmId','$dateCreated')");
-
-    if ($query) {
-
-      $statusMsg = "<div class='alert alert-success'  style='margin-right:700px;'>Created Successfully!</div>";
-
-    } else {
-      $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
-    }
-  }
-}
-
-//---------------------------------------EDIT-------------------------------------------------------------
-
-
-
-
-
-
-//--------------------EDIT------------------------------------------------------------
-
-if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "edit") {
-  $Id = $_GET['Id'];
-
-  $query = mysqli_query($conn, "select * from tblstudents where Id ='$Id'");
-  $row = mysqli_fetch_array($query);
-
-  //------------UPDATE-----------------------------
-
-  if (isset($_POST['update'])) {
-
+  if (isset($_POST['save'])) {
+    // Code for creating a new student
     $firstName = $_POST['firstName'];
     $lastName = $_POST['lastName'];
     $otherName = $_POST['otherName'];
-
     $admissionNumber = $_POST['admissionNumber'];
     $classId = $_POST['classId'];
     $classArmId = $_POST['classArmId'];
     $dateCreated = date("Y-m-d");
 
+    $query = mysqli_query($conn, "select * from tblstudents where admissionNumber ='$admissionNumber'");
+    $ret = mysqli_fetch_array($query);
+
+    if ($ret > 0) {
+      $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>This Email Address Already Exists!</div>";
+    } else {
+      $query = mysqli_query($conn, "insert into tblstudents(firstName,lastName,otherName,admissionNumber,password,classId,classArmId,dateCreated) 
+      value('$firstName','$lastName','$otherName','$admissionNumber','12345','$classId','$classArmId','$dateCreated')");
+
+      if ($query) {
+        $statusMsg = "<div class='alert alert-success'  style='margin-right:700px;'>Created Successfully!</div>";
+      } else {
+        $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
+      }
+    }
+
+  } elseif (isset($_POST['update'])) {
+    // Code for updating a student
+    $firstName = $_POST['firstName'];
+    $lastName = $_POST['lastName'];
+    $otherName = $_POST['otherName'];
+    $admissionNumber = $_POST['admissionNumber'];
+    $classId = $_POST['classId'];
+    $classArmId = $_POST['classArmId'];
+    $dateCreated = date("Y-m-d");
+    $Id = $_POST['studentId'];
+
     $query = mysqli_query($conn, "update tblstudents set firstName='$firstName', lastName='$lastName',
     otherName='$otherName', admissionNumber='$admissionNumber',password='12345', classId='$classId',classArmId='$classArmId'
     where Id='$Id'");
-    if ($query) {
 
-      echo "<script type = \"text/javascript\">
-                window.location = (\"createStudents.php\")
-                </script>";
+    if ($query) {
+      echo "<script type='text/javascript'>
+              window.location = ('createStudents.php')
+            </script>";
     } else {
       $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
     }
   }
 }
 
-
 //--------------------------------DELETE------------------------------------------------------------------
 
 if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete") {
+  // Code for deleting a student
   $Id = $_GET['Id'];
   $classArmId = $_GET['classArmId'];
 
   $query = mysqli_query($conn, "DELETE FROM tblstudents WHERE Id='$Id'");
 
   if ($query == TRUE) {
-
-    echo "<script type = \"text/javascript\">
-            window.location = (\"createStudents.php\")
-            </script>";
+    echo "<script type='text/javascript'>
+            window.location = ('createStudents.php')
+          </script>";
   } else {
-
     $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
   }
-
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -113,7 +88,7 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/attnlg.png" rel="icon">
-  <?php include 'includes/title.php'; ?>
+  <title>Create Students</title>
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/ruang-admin.min.css" rel="stylesheet">
@@ -151,16 +126,13 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
       <div id="content">
         <!-- TopBar -->
         <?php include "Includes/topbar.php"; ?>
-        <!-- Topbar -->
-
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
-          <!-- Input Group -->
           <div class="row">
             <div class="col-lg-12">
               <div class="card mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h1 class="h3 mb-0 text-gray-800">Create Students</h1>
+                <div class="card-header bg-navbar py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h1 class="h5 mb-0 text-primary">Students</h1>
                 </div>
                 <div class="table-responsive p-3">
                   <table class="table align-items-center table-flush table-hover" id="dataTableHover">
@@ -169,10 +141,10 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                         <th>#</th>
                         <th>First Name</th>
                         <th>Last Name</th>
-                        <th>Middle Name</th>
+                        <th>Other Name</th>
                         <th>Admission No</th>
                         <th>Class</th>
-                        <th>Subject</th>
+                        <th>Class Arm</th>
                         <th>Date Created</th>
                         <th>Edit</th>
                         <th>Delete</th>
@@ -204,8 +176,8 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                                 <td>" . $rows['className'] . "</td>
                                 <td>" . $rows['classArmName'] . "</td>
                                  <td>" . $rows['dateCreated'] . "</td>
-                                <td><a href='#' data-toggle='modal' data-target='#addStudent' data-id='" . $rows['Id'] . "'><i class='fas fa-fw fa-edit'></i></a></td>
-                                <td><a href='?action=delete&Id=" . $rows['Id'] . " data-toggle='modal' data-target='#addStudent''><i class='fas fa-fw fa-trash'></i></a></td>
+                                <td><a href='?action=edit&Id=" . $rows['Id'] . "'><i class='fas fa-fw fa-edit'></i></a></td>
+                                <td><a href='?action=delete&Id=" . $rows['Id'] . "'><i class='fas fa-fw fa-trash'></i></a></td>
                               </tr>";
                         }
                       } else {
@@ -219,107 +191,21 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                     </tbody>
                   </table>
                 </div>
-                <div class="card-footer align-items-right justify-content-between">
-                  <!-- Button trigger modal -->
-                  <div class="d-grid gap-1 d-md-flex justify-content-md-end">
-                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addStudent">
-                      Add
-                    </button>
-                  </div>
-                  <!-- Modal -->
-                  <div class="modal fade" id="addStudent" tabindex="-1" role="dialog"
-                    aria-labelledby="studentAddTrigger" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">Add Student</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <form method="post">
-                            <label class="form-control-label">First Name<span class="text-danger ml-2">*</span></label>
-                            <input type="text" class="form-control" name="firstName"
-                              value="<?php echo $row['firstName']; ?>" id="exampleInputFirstName">
-                            <label class="form-control-label">Last Name<span class="text-danger ml-2">*</span></label>
-                            <input type="text" class="form-control" name="lastName"
-                              value="<?php echo $row['lastName']; ?>" id="exampleInputFirstName">
-                            <label class="form-control-label">Middle Name<span class="text-danger ml-2">*</span></label>
-                            <input type="text" class="form-control" name="otherName"
-                              value="<?php echo $row['otherName']; ?>" id="exampleInputFirstName">
-                            <label class="form-control-label">Admission Number<span
-                                class="text-danger ml-2">*</span></label>
-                            <input type="text" class="form-control" required name="admissionNumber"
-                              value="<?php echo $row['admissionNumber']; ?>" id="exampleInputFirstName">
-                            <label class="form-control-label">Subject<span class="text-danger ml-2">*</span></label>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                              <?php
-                              echo "<div id='txtHint'></div>";
-                              ?>
-                              <?php
-                              if (isset($Id)) {
-                                ?>
-                                <button type="submit" name="update" class="btn btn-warning">Update</button>
-                                <?php
-                              } else {
-                                ?>
-                                <button type="submit" name="save" class="btn btn-primary">Save</button>
-                                <?php
-                              }
-                              ?>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!---Container Fluid-->
   </div>
   <!-- Footer -->
   <?php include "Includes/footer.php"; ?>
-  <!-- Footer -->
+  </div>
 
   <!-- Scroll to top -->
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
-
-  <!-- Edit Modal -->
-  <script>
-    $(document).ready(function () {
-      $('#addStudent').on('show.bs.modal', function (event) {
-        var link = $(event.relatedTarget); // Get the link that triggered the modal
-        var Id = link.data('id'); // Extract the ID value from the link's data-id attribute
-
-        // Update the modal's content with the respective data using AJAX or other methods
-        // Example AJAX call:
-        $.ajax({
-          url: 'get_student_data.php', // Replace with your PHP file to fetch student data
-          type: 'POST',
-          data: {
-            Id: Id
-          },
-          success: function (response) {
-            // Update the modal's content with the fetched data
-            $('#modalContent').html(response);
-          },
-          error: function (xhr, status, error) {
-            console.log(error); // Handle the error
-          }
-        });
-      });
-    });
-  </script>
-
 
   <script src="../vendor/jquery/jquery.min.js"></script>
   <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
