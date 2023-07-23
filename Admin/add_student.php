@@ -33,10 +33,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 }
 ?>
-
-<!-- Add the hidden input field for the admission number within the form -->
-<form action="add_student.php" method="POST" id="addStudentForm">
-  <input type="hidden" id="admissionNumber" name="admissionNumber">
-  <!-- Rest of the form fields here -->
-  <!-- ... -->
-</form>
