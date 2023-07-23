@@ -6,82 +6,54 @@ include '../Includes/session.php';
 //------------------------SAVE--------------------------------------------------
 
 if (isset($_POST['save'])) {
-
   $className = $_POST['className'];
 
-  $query = mysqli_query($conn, "select * from tblclass where className ='$className'");
+  $query = mysqli_query($conn, "SELECT * FROM tblclass WHERE className ='$className'");
   $ret = mysqli_fetch_array($query);
 
   if ($ret > 0) {
-
     $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>This Class Already Exists!</div>";
   } else {
-
-    $query = mysqli_query($conn, "insert into tblclass(className) value('$className')");
-
+    $query = mysqli_query($conn, "INSERT INTO tblclass (className) VALUES ('$className')");
     if ($query) {
-
-      $statusMsg = "<div class='alert alert-success'  style='margin-right:700px;'>Created Successfully!</div>";
+      $statusMsg = "<div class='alert alert-success' style='margin-right:700px;'>Created Successfully!</div>";
     } else {
       $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
     }
   }
 }
 
-//---------------------------------------EDIT-------------------------------------------------------------
-
-
-
-
-
-
-//--------------------EDIT------------------------------------------------------------
+//--------------------------------EDIT-----------------------------------------------------
 
 if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "edit") {
   $Id = $_GET['Id'];
-
-  $query = mysqli_query($conn, "select * from tblclass where Id ='$Id'");
+  $query = mysqli_query($conn, "SELECT * FROM tblclass WHERE Id ='$Id'");
   $row = mysqli_fetch_array($query);
 
   //------------UPDATE-----------------------------
 
   if (isset($_POST['update'])) {
-
     $className = $_POST['className'];
-
-    $query = mysqli_query($conn, "update tblclass set className='$className' where Id='$Id'");
-
+    $query = mysqli_query($conn, "UPDATE tblclass SET className='$className' WHERE Id='$Id'");
     if ($query) {
-
-      echo "<script type = \"text/javascript\">
-                window.location = (\"createClass.php\")
-                </script>";
+      echo "<script type=\"text/javascript\">window.location = (\"createClass.php\");</script>";
     } else {
       $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
     }
   }
 }
 
-
-//--------------------------------DELETE------------------------------------------------------------------
+//--------------------------------DELETE----------------------------------------------------
 
 if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete") {
   $Id = $_GET['Id'];
-
   $query = mysqli_query($conn, "DELETE FROM tblclass WHERE Id='$Id'");
-
   if ($query == TRUE) {
-
-    echo "<script type = \"text/javascript\">
-                window.location = (\"createClass.php\")
-                </script>";
+    echo "<script type=\"text/javascript\">window.location = (\"createClass.php\");</script>";
   } else {
-
     $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
   }
-
 }
-
 
 ?>
 
@@ -111,140 +83,164 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
 
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Create Class</h1>
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Home</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Create Class</li>
-            </ol>
-          </div>
-
           <div class="row">
             <div class="col-lg-12">
-              <!-- Form Basic -->
               <div class="card mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Create Class</h6>
-                  <?php echo $statusMsg; ?>
+                <div class="card-header bg-navbar py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h1 class="h5 mb-0 text-primary">Classes</h1>
                 </div>
-                <div class="card-body">
-                  <form method="post">
-                    <div class="form-group row mb-3">
-                      <div class="col-xl-6">
-                        <label class="form-control-label">Class Name<span class="text-danger ml-2">*</span></label>
-                        <input type="text" class="form-control" name="className"
-                          value="<?php echo $row['className']; ?>" id="exampleInputFirstName" placeholder="Class Name">
-                      </div>
-                    </div>
-                    <?php
-                    if (isset($Id)) {
-                      ?>
-                      <button type="submit" name="update" class="btn btn-warning">Update</button>
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <?php
-                    } else {
-                      ?>
-                      <button type="submit" name="save" class="btn btn-primary">Save</button>
-                      <?php
-                    }
-                    ?>
-                  </form>
-                </div>
-              </div>
+                <div class="table-responsive p-3">
+                  <table class="table align-items-center table-flush table-hover" id="dataTableHover">
+                    <thead class="thead-light">
+                      <tr>
+                        <th>#</th>
+                        <th>Class Name</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                      </tr>
+                    </thead>
 
-              <!-- Input Group -->
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="card mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                      <h6 class="m-0 font-weight-bold text-primary">All Classes</h6>
-                    </div>
-                    <div class="table-responsive p-3">
-                      <table class="table align-items-center table-flush table-hover" id="dataTableHover">
-                        <thead class="thead-light">
+                    <tbody>
+                      <?php
+                      $query = "SELECT * FROM tblclass";
+                      $rs = $conn->query($query);
+                      $num = $rs->num_rows;
+                      $sn = 0;
+                      if ($num > 0) {
+                        while ($rows = $rs->fetch_assoc()) {
+                          $sn = $sn + 1;
+                          $classId = $rows['Id']; // Get the ID of the class
+                          echo "
+                            <tr>
+                              <td>" . $sn . "</td>
+                              <td>" . $rows['className'] . "</td>
+                              <td>
+                                <a href=\"#addClassModal\" class=\"edit-btn\" data-id=\"" . $classId . "\" data-toggle=\"modal\">
+                                  <i class=\"fas fa-fw fa-edit\"></i>Edit
+                                </a>
+                              </td>
+                              <td>
+                                <a href='?action=delete&Id=" . $classId . "'>
+                                  <i class='fas fa-fw fa-trash'></i>Delete
+                                </a>
+                              </td>
+                            </tr>";
+                        }
+                      } else {
+                        echo "
                           <tr>
-                            <th>#</th>
-                            <th>Class Name</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                          </tr>
-                        </thead>
+                            <td colspan='4' class='text-center'>No Record Found!</td>
+                          </tr>";
+                      }
+                      ?>
+                    </tbody>
 
-                        <tbody>
-
-                          <?php
-                          $query = "SELECT * FROM tblclass";
-                          $rs = $conn->query($query);
-                          $num = $rs->num_rows;
-                          $sn = 0;
-                          if ($num > 0) {
-                            while ($rows = $rs->fetch_assoc()) {
-                              $sn = $sn + 1;
-                              echo "
-                              <tr>
-                                <td>" . $sn . "</td>
-                                <td>" . $rows['className'] . "</td>
-                                <td><a href='?action=edit&Id=" . $rows['Id'] . "'><i class='fas fa-fw fa-edit'></i>Edit</a></td>
-                                <td><a href='?action=delete&Id=" . $rows['Id'] . "'><i class='fas fa-fw fa-trash'></i>Delete</a></td>
-                              </tr>";
-                            }
-                          } else {
-                            echo
-                              "<div class='alert alert-danger' role='alert'>
-                            No Record Found!
-                            </div>";
-                          }
-
-                          ?>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+                  </table>
+                  <button type="button" class="btn btn-primary mb-3" id="add-btn" data-toggle="modal"
+                    data-target="#addClassModal"> Add Class
+                  </button>
                 </div>
               </div>
             </div>
-            <!--Row-->
-
-            <!-- Documentation Link -->
-            <!-- <div class="row">
-            <div class="col-lg-12 text-center">
-              <p>For more documentations you can visit<a href="https://getbootstrap.com/docs/4.3/components/forms/"
-                  target="_blank">
-                  bootstrap forms documentations.</a> and <a
-                  href="https://getbootstrap.com/docs/4.3/components/input-group/" target="_blank">bootstrap input
-                  groups documentations</a></p>
-            </div>
-          </div> -->
-
           </div>
-          <!---Container Fluid-->
         </div>
-        <!-- Footer -->
-        <?php include "Includes/footer.php"; ?>
-        <!-- Footer -->
+      </div>
+      <!-- Footer -->
+      <?php include "Includes/footer.php"; ?>
+    </div>
+  </div>
+
+  <!-- Scroll to top -->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Modal for adding/editing a class -->
+  <div class="modal fade" id="addClassModal" tabindex="-1" role="dialog" aria-labelledby="addClassModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-navbar">
+          <h5 class="modal-title text-primary" id="addClassModalLabel">Add Class</h5>
+          <button type="button" class="close text-primary" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="" method="POST" id="classForm">
+            <div class="form-group">
+              <label for="className">Class Name</label>
+              <input type="text" class="form-control" id="className" name="className" required>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary" name="save">Add Class</button>
+              <button type="submit" class="btn btn-primary" name="update" form="classForm" style="display: none;">Update
+                Class</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- Scroll to top -->
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fas fa-angle-up"></i>
-    </a>
+  <script src="../vendor/jquery/jquery.min.js"></script>
+  <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="js/ruang-admin.min.js"></script>
+  <!-- Page level plugins -->
+  <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-    <script src="../vendor/jquery/jquery.min.js"></script>
-    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="js/ruang-admin.min.js"></script>
-    <!-- Page level plugins -->
-    <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+  <!-- Page level custom scripts -->
+  <script>
+    $(document).ready(function () {
+      $('#dataTable').DataTable(); // ID From dataTable 
+      $('#dataTableHover').DataTable(); // ID From dataTable with Hover
+    });
+  </script>
 
-    <!-- Page level custom scripts -->
-    <script>
-      $(document).ready(function () {
-        $('#dataTable').DataTable(); // ID From dataTable 
-        $('#dataTableHover').DataTable(); // ID From dataTable with Hover
+  <script>
+    $(document).ready(function () {
+      // Function to open the modal for adding a class
+      function openAddModal() {
+        $("#addClassModalLabel").text("Add Class");
+        $("#className").val("");
+        $("#classForm").attr("action", ""); // Set action to empty for adding
+        $("button[name='save']").show();
+        $("button[name='update']").hide();
+      }
+
+      // Function to open the modal for editing a class
+      function openEditModal(id, className) {
+        $("#addClassModalLabel").text("Edit Class");
+        $("#className").val(className);
+        $("#classForm").attr("action", "?Id=" + id + "&action=edit");
+        $("button[name='save']").hide();
+        $("button[name='update']").show();
+        $('#addClassModal').modal('show');
+      }
+
+      // Open the modal when the "Add" button is clicked
+      $("#add-btn").on("click", function () {
+        openAddModal();
       });
-    </script>
+
+      // Open the modal when the "Edit" button is clicked
+      $(document).on("click", ".edit-btn", function (e) {
+        e.preventDefault();
+        var id = $(this).data("id");
+        var className = $(this).closest("tr").find("td:eq(1)").text();
+        openEditModal(id, className);
+      });
+
+      // Clear the modal content when it's closed
+      $('#addClassModal').on('hidden.bs.modal', function (e) {
+        openAddModal();
+      });
+    });
+  </script>
+
 </body>
 
 </html>
