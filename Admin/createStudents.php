@@ -3,6 +3,45 @@
 error_reporting(0);
 include '../Includes/dbcon.php';
 include '../Includes/session.php';
+
+// Function to check if the admission number is unique
+function isAdmissionNumberUnique($admissionNumber, $conn)
+{
+  $query = "SELECT * FROM tblstudents WHERE admissionNumber = ?";
+  $stmt = $conn->prepare($query);
+  $stmt->bind_param("s", $admissionNumber);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  return $result->num_rows == 0;
+}
+
+// Add an event listener to the modal form for submitting the data
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['firstName'])) {
+  // Form submission for adding/editing a student
+  $firstName = $_POST['firstName'];
+  $lastName = $_POST['lastName'];
+  $otherName = $_POST['otherName'];
+  $classId = $_POST['classId'];
+  $classArmId = $_POST['classArmId'];
+
+  // Generate admission number automatically with the format AMS-year-random
+  $year = date("Y");
+  $random = rand(1000, 9999);
+  $admissionNumber = "AMS-$year-$random";
+
+  // Check if the generated admission number is unique, if not, regenerate until it's unique
+  while (!isAdmissionNumberUnique($admissionNumber, $conn)) {
+    $random = rand(1000, 9999);
+    $admissionNumber = "AMS-$year-$random";
+  }
+
+  // Perform the insertion or update in the database with the unique admission number
+  // Your code for inserting/updating the student's data goes here...
+
+  // For testing, we'll just echo the admission number
+  echo $admissionNumber;
+  exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -247,14 +286,40 @@ include '../Includes/session.php';
 
     // Add an event listener to the modal form for submitting the data
     document.getElementById("addStudentForm").addEventListener("submit", function (event) {
+      event.preventDefault(); // Prevent the default form submission
+
       // Generate admission number automatically with the format AMS-year-random
       const year = new Date().getFullYear();
       const random = Math.floor(1000 + Math.random() * 9000);
       const admissionNumber = `AMS-${year}-${random}`;
-      document.getElementById("admissionNumber").value = admissionNumber;
 
-      // Allow the form to submit
-      return true;
+      // Send an AJAX request to check if the generated admission number is unique
+      const xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          const uniqueAdmissionNumber = this.responseText;
+          // Set the unique admission number in the form
+          document.getElementById("admissionNumber").value = uniqueAdmissionNumber;
+          // Allow the form to submit
+          document.getElementById("addStudentForm").submit();
+        }
+      };
+
+      // Check if the generated admission number is unique
+      xmlhttp.open("POST", "<?php echo $_SERVER['PHP_SELF']; ?>", true);
+      xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xmlhttp.send(
+        "firstName=" +
+        document.getElementById("firstName").value +
+        "&lastName=" +
+        document.getElementById("lastName").value +
+        "&otherName=" +
+        document.getElementById("otherName").value +
+        "&classId=" +
+        document.getElementById("classId").value +
+        "&classArmId=" +
+        document.getElementById("classArmId").value
+      );
     });
   </script>
 
