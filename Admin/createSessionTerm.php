@@ -6,24 +6,19 @@ include '../Includes/session.php';
 //------------------------SAVE--------------------------------------------------
 
 if (isset($_POST['save'])) {
-
   $sessionName = $_POST['sessionName'];
   $termId = $_POST['termId'];
   $dateCreated = date("Y-m-d");
 
-  $query = mysqli_query($conn, "select * from tblsessionterm where sessionName ='$sessionName' and termId = '$termId'");
+  $query = mysqli_query($conn, "SELECT * FROM tblsessionterm WHERE sessionName ='$sessionName' AND termId = '$termId'");
   $ret = mysqli_fetch_array($query);
 
   if ($ret > 0) {
-
     $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>This Session and Term Already Exists!</div>";
   } else {
-
-    $query = mysqli_query($conn, "insert into tblsessionterm(sessionName,termId,isActive,dateCreated) value('$sessionName','$termId','0','$dateCreated')");
-
+    $query = mysqli_query($conn, "INSERT INTO tblsessionterm (sessionName, termId, isActive, dateCreated) VALUES ('$sessionName', '$termId', '0', '$dateCreated')");
     if ($query) {
-
-      $statusMsg = "<div class='alert alert-success'  style='margin-right:700px;'>Created Successfully!</div>";
+      $statusMsg = "<div class='alert alert-success' style='margin-right:700px;'>Created Successfully!</div>";
     } else {
       $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
     }
@@ -114,16 +109,17 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "activate
   <div id="wrapper">
     <div id="content-wrapper" class="d-flex flex-column">
       <div id="content">
+        <!-- TopBar -->
+        <?php include "Includes/topbar.php"; ?>
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
           <div class="row">
             <div class="col-lg-12">
               <div class="card mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">All Session and Term</h6>
-                  <h6 class="m-0 font-weight-bold text-danger">Note: <i>Click on the check symbol besides each to
-                      make session and term active!</i></h6>
-                </div>
+                <div class="card-header bg-navbar py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h1 class="h5 mb-0 text-primary">Sessions and Terms</h1>
+                  <h1 class="h6 mb-0 text-warning"><i>Click on the check symbol besides each to make session and term active!</i></h1>
+                  </div>
                 <div class="table-responsive p-3">
                   <table class="table align-items-center table-flush table-hover" id="dataTableHover">
                     <thead class="thead-light">
@@ -132,7 +128,7 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "activate
                         <th>Session</th>
                         <th>Term</th>
                         <th>Status</th>
-                        <th>Date</th>
+                        <th>Date Created</th>
                         <th>Activate</th>
                         <th>Edit</th>
                         <th>Delete</th>
@@ -179,6 +175,9 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "activate
                       ?>
                     </tbody>
                   </table>
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSessionModal">
+                    Add New Session
+                  </button>
                 </div>
               </div>
             </div>
@@ -189,6 +188,44 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "activate
   </div>
   <!-- Footer -->
   <?php include "Includes/footer.php"; ?>
+
+  <!-- Modal for adding new session -->
+  <div class="modal fade" id="addSessionModal" tabindex="-1" role="dialog" aria-labelledby="addSessionModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addSessionModalLabel">Add New Session</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Session form -->
+          <form action="" method="post">
+            <div class="form-group">
+              <label for="sessionName">Session Name</label>
+              <input type="text" class="form-control" name="sessionName" required>
+            </div>
+            <div class="form-group">
+              <label for="termId">Term</label>
+              <select class="form-control" name="termId" required>
+                <?php
+                // Fetch the terms from the tblterm table
+                $query = "SELECT * FROM tblterm";
+                $rs = $conn->query($query);
+                while ($row = $rs->fetch_assoc()) {
+                  echo '<option value="' . $row['Id'] . '">' . $row['termName'] . '</option>';
+                }
+                ?>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary" name="save">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Scroll to top -->
   <a class="scroll-to-top rounded" href="#page-top">
