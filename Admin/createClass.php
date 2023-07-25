@@ -67,7 +67,7 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/attnlg.png" rel="icon">
-  <?php include 'includes/title.php'; ?>
+  <title>Manage Classes</title>
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/ruang-admin.min.css" rel="stylesheet">

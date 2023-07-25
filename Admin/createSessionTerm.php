@@ -99,7 +99,7 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "activate
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/attnlg.png" rel="icon">
-  <?php include 'includes/title.php'; ?>
+  <title>Manage Sessions</title>
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/ruang-admin.min.css" rel="stylesheet">
@@ -111,15 +111,15 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "activate
       <div id="content">
         <!-- TopBar -->
         <?php include "Includes/topbar.php"; ?>
-        <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
           <div class="row">
             <div class="col-lg-12">
               <div class="card mb-4">
                 <div class="card-header bg-navbar py-3 d-flex flex-row align-items-center justify-content-between">
                   <h1 class="h5 mb-0 text-primary">Sessions and Terms</h1>
-                  <h1 class="h6 mb-0 text-warning"><i>Click on the check symbol besides each to make session and term active!</i></h1>
-                  </div>
+                  <h1 class="h6 mb-0 text-warning"><i>Click on the check symbol besides each to make session and term
+                      active!</i></h1>
+                </div>
                 <div class="table-responsive p-3">
                   <table class="table align-items-center table-flush table-hover" id="dataTableHover">
                     <thead class="thead-light">
@@ -153,6 +153,8 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "activate
                             $status = "InActive";
                           }
                           $sn = $sn + 1;
+                          // Generate data attributes for edit button
+                          $editDataAttr = 'data-id="' . $rows['Id'] . '" data-name="' . $rows['sessionName'] . '" data-termid="' . $rows['termId'] . '"';
                           echo "
                               <tr>
                                 <td>" . $sn . "</td>
@@ -160,8 +162,8 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "activate
                                 <td>" . $rows['termName'] . "</td>
                                 <td>" . $status . "</td>
                                 <td>" . $rows['dateCreated'] . "</td>
-                                 <td><a href='?action=activate&Id=" . $rows['Id'] . "'><i class='fas fa-fw fa-check'></i></a></td>
-                                <td><a href='?action=edit&Id=" . $rows['Id'] . "'><i class='fas fa-fw fa-edit'></i></a></td>
+                                <td><a href='?action=activate&Id=" . $rows['Id'] . "'><i class='fas fa-fw fa-check'></i></a></td>
+                                <td><a href='#' class='edit-btn' $editDataAttr><i class='fas fa-fw fa-edit'></i></a></td>
                                 <td><a href='?action=delete&Id=" . $rows['Id'] . "'><i class='fas fa-fw fa-trash'></i></a></td>
                               </tr>";
                         }
@@ -176,7 +178,7 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "activate
                     </tbody>
                   </table>
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSessionModal">
-                    Add New Session
+                    Add Session
                   </button>
                 </div>
               </div>
@@ -194,8 +196,8 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "activate
     aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addSessionModalLabel">Add New Session</h5>
+        <div class="modal-header bg-navbar">
+          <h5 class="modal-title text-primary" id="addSessionModalLabel">Add Session</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -227,6 +229,45 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "activate
     </div>
   </div>
 
+  <!-- Modal for editing session -->
+  <div class="modal fade" id="editSessionModal" tabindex="-1" role="dialog" aria-labelledby="editSessionModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-navbar">
+          <h5 class="modal-title text-primary" id="editSessionModalLabel">Edit Session</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Session form for editing -->
+          <form action="" method="post">
+            <input type="hidden" name="sessionId" id="editSessionId" value="">
+            <div class="form-group">
+              <label for="editSessionName">Session Name</label>
+              <input type="text" class="form-control" name="sessionName" id="editSessionName" required>
+            </div>
+            <div class="form-group">
+              <label for="editTermId">Term</label>
+              <select class="form-control" name="termId" id="editTermId" required>
+                <?php
+                // Fetch the terms from the tblterm table
+                $query = "SELECT * FROM tblterm";
+                $rs = $conn->query($query);
+                while ($row = $rs->fetch_assoc()) {
+                  echo '<option value="' . $row['Id'] . '">' . $row['termName'] . '</option>';
+                }
+                ?>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary" name="update">Update</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Scroll to top -->
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
@@ -245,6 +286,18 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "activate
     $(document).ready(function () {
       $('#dataTable').DataTable(); // ID From dataTable 
       $('#dataTableHover').DataTable(); // ID From dataTable with Hover
+
+      // When the edit button is clicked, update the modal with session details
+      $('#dataTableHover').on('click', '.edit-btn', function () {
+        var sessionId = $(this).data('id');
+        var sessionName = $(this).data('name');
+        var termId = $(this).data('termid');
+        $('#editSessionModalLabel').text('Edit Session');
+        $('#editSessionName').val(sessionName);
+        $('#editTermId').val(termId);
+        $('#editSessionId').val(sessionId);
+        $('#editSessionModal').modal('show'); // Open the edit modal
+      });
     });
   </script>
 </body>

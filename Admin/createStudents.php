@@ -15,7 +15,7 @@ include '../Includes/session.php';
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/attnlg.png" rel="icon">
-  <title>Create Students</title>
+  <title>Manage Students</title>
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/ruang-admin.min.css" rel="stylesheet">
