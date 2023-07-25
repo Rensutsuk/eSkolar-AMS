@@ -45,13 +45,6 @@ if (isset($_POST['save'])) {
   }
 }
 
-//---------------------------------------EDIT-------------------------------------------------------------
-
-
-
-
-
-
 //--------------------EDIT------------------------------------------------------------
 
 if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "edit") {
@@ -108,13 +101,9 @@ if (isset($_GET['Id']) && isset($_GET['classArmId']) && isset($_GET['action']) &
       $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
     }
   } else {
-
     $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
   }
-
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -131,8 +120,6 @@ if (isset($_GET['Id']) && isset($_GET['classArmId']) && isset($_GET['action']) &
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/ruang-admin.min.css" rel="stylesheet">
-
-
 
   <script>
     function classArmDropdown(str) {
@@ -239,8 +226,8 @@ if (isset($_GET['Id']) && isset($_GET['classArmId']) && isset($_GET['action']) &
                     aria-hidden="true">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">Add Teacher</h5>
+                        <div class="modal-header bg-navbar">
+                          <h5 class="modal-title text-primary">Add Teacher</h5>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>

@@ -5,64 +5,64 @@ include '../Includes/session.php';
 
 //------------------------SAVE--------------------------------------------------
 
-if (isset($_POST['saveClassArm'])) {
+if (isset($_POST['save'])) {
   $classId = $_POST['classId'];
   $classArmName = $_POST['classArmName'];
 
-  $query = mysqli_query($conn, "SELECT * FROM tblclassarms WHERE classArmName ='$classArmName' AND classId = '$classId'");
+  $query = mysqli_query($conn, "select * from tblclassarms where classArmName ='$classArmName' and classId = '$classId'");
   $ret = mysqli_fetch_array($query);
 
   if ($ret > 0) {
     $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>This Class Arm Already Exists!</div>";
   } else {
-    $query = mysqli_query($conn, "INSERT INTO tblclassarms (classId, classArmName, isAssigned) VALUES ('$classId','$classArmName','0')");
+    $query = mysqli_query($conn, "insert into tblclassarms(classId,classArmName,isAssigned) value('$classId','$classArmName','0')");
     if ($query) {
-      $statusMsg = "<div class='alert alert-success' style='margin-right:700px;'>Created Successfully!</div>";
+      $statusMsg = "<div class='alert alert-success'  style='margin-right:700px;'>Created Successfully!</div>";
     } else {
       $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
     }
   }
 }
 
-//--------------------EDIT------------------------------------------------------------
-
-// Initialize variables to store data for editing
-$editId = "";
-$editClassId = "";
-$editClassArmName = "";
+//---------------------------------------EDIT-------------------------------------------------------------
 
 if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "edit") {
-  $editId = $_GET['Id'];
-
-  $query = mysqli_query($conn, "SELECT * FROM tblclassarms WHERE Id ='$editId'");
+  $Id = $_GET['Id'];
+  $query = mysqli_query($conn, "select * from tblclassarms where Id ='$Id'");
   $row = mysqli_fetch_array($query);
 
-  // Populate variables for editing
-  $editClassId = $row['classId'];
-  $editClassArmName = $row['classArmName'];
-}
+  //------------UPDATE-----------------------------
 
+  if (isset($_POST['update'])) {
+    $classId = $_POST['classId'];
+    $classArmName = $_POST['classArmName'];
+
+    $query = mysqli_query($conn, "update tblclassarms set classId = '$classId', classArmName='$classArmName' where Id='$Id'");
+
+    if ($query) {
+      echo "<script type = \"text/javascript\">
+                window.location = (\"createClassArms.php\")
+                </script>";
+    } else {
+      $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
+    }
+  }
+}
 
 //--------------------------------DELETE------------------------------------------------------------------
 
 if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete") {
   $Id = $_GET['Id'];
-
   $query = mysqli_query($conn, "DELETE FROM tblclassarms WHERE Id='$Id'");
 
   if ($query == TRUE) {
-
     echo "<script type = \"text/javascript\">
-                window.location = (\"createClassArms.php\")
-                </script>";
+          window.location = (\"createClassArms.php\")
+          </script>";
   } else {
-
     $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
   }
-
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -75,7 +75,7 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/attnlg.png" rel="icon">
-  <?php include 'includes/title.php'; ?>
+  <title>Manage Subjects</title>
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/ruang-admin.min.css" rel="stylesheet">
@@ -87,8 +87,9 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
       <div id="content">
         <!-- TopBar -->
         <?php include "Includes/topbar.php"; ?>
+
+        <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
-          <!-- Input Group -->
           <div class="row">
             <div class="col-lg-12">
               <div class="card mb-4">
@@ -101,7 +102,7 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                       <tr>
                         <th>#</th>
                         <th>Class Name</th>
-                        <th>Class Arm Name</th>
+                        <th>Subject</th>
                         <th>Edit</th>
                         <th>Delete</th>
                       </tr>
@@ -109,9 +110,9 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
 
                     <tbody>
                       <?php
-                      $query = "SELECT tblclassarms.Id, tblclassarms.isAssigned, tblclass.className, tblclassarms.classArmName 
-            FROM tblclassarms
-            INNER JOIN tblclass ON tblclass.Id = tblclassarms.classId";
+                      $query = "SELECT tblclassarms.Id,tblclassarms.isAssigned,tblclass.className,tblclassarms.classArmName 
+                      FROM tblclassarms
+                      INNER JOIN tblclass ON tblclass.Id = tblclassarms.classId";
                       $rs = $conn->query($query);
                       $num = $rs->num_rows;
                       $sn = 0;
@@ -120,23 +121,30 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                         while ($rows = $rs->fetch_assoc()) {
                           $sn = $sn + 1;
                           echo "
-                            <tr>
-                              <td>" . $sn . "</td>
-                              <td>" . $rows['className'] . "</td>
-                              <td>" . $rows['classArmName'] . "</td>
-                              <td><a href='#addClassArmModal' class='edit-btn' data-id='" . $rows['Id'] . "' data-class-id='" . $rows['classId'] . "' data-class-arm-name='" . $rows['classArmName'] . "' data-toggle='modal'><i class='fas fa-fw fa-edit'></i>Edit</a></td>
-                              <td><a href='?action=delete&Id=" . $rows['Id'] . "'><i class='fas fa-fw fa-trash'></i>Delete</a></td>
-                            </tr>";
+                              <tr>
+                                <td>" . $sn . "</td>
+                                <td>" . $rows['className'] . "</td>
+                                <td>" . $rows['classArmName'] . "</td>
+                                <td>
+                                  <a href='#addClassSubjectModal' data-toggle='modal' data-target='#addClassSubjectModal' data-id='" . $rows['Id'] . "' data-classid='" . $rows['classId'] . "' data-classarmname='" . $rows['classArmName'] . "'>
+                                    <i class='fas fa-fw fa-edit'></i>Edit
+                                  </a>
+                                </td>
+                                <td><a href='?action=delete&Id=" . $rows['Id'] . "'><i class='fas fa-fw fa-trash'></i>Delete</a></td>
+                              </tr>";
                         }
                       } else {
-                        echo "<div class='alert alert-danger' role='alert'>No Record Found!</div>";
+                        echo
+                          "<div class='alert alert-danger' role='alert'>
+                            No Record Found!
+                            </div>";
                       }
                       ?>
                     </tbody>
                   </table>
                   <button type="button" class="btn btn-primary mb-3" data-toggle="modal"
-                    data-target="#addClassArmModal">
-                    Add Class Arm
+                    data-target="#addClassSubjectModal">
+                    Add Subject
                   </button>
                 </div>
               </div>
@@ -146,52 +154,48 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
       </div>
     </div>
   </div>
-  <!-- Modal for adding a class arm -->
-  <div class="modal fade" id="addClassArmModal" tabindex="-1" role="dialog" aria-labelledby="addClassArmModalLabel"
-    aria-hidden="true">
+
+  <!-- Add/Edit Class Subject Modal -->
+  <div class="modal fade" id="addClassSubjectModal" tabindex="-1" role="dialog"
+    aria-labelledby="addClassSubjectModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header bg-navbar">
-          <h5 class="modal-title text-primary" id="addClassArmModalLabel">Add Class Arm</h5>
-          <button type="button" class="close text-primary" data-dismiss="modal" aria-label="Close">
+          <h5 class="modal-title text-primary" id="addClassSubjectModalLabel">Add Subject</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-          <form action="" method="POST" id="classArmForm">
+        <form method="post" action="">
+          <div class="modal-body">
+            <input type="hidden" id="modalId" name="modalId">
             <div class="form-group">
-              <label for="classId">Class</label>
+              <label for="classId">Select Class:</label>
               <select class="form-control" id="classId" name="classId" required>
                 <?php
-                $query = "SELECT * FROM tblclass";
-                $rs = $conn->query($query);
-                if ($rs->num_rows > 0) {
-                  while ($row = $rs->fetch_assoc()) {
-                    echo '<option value="' . $row['Id'] . '">' . $row['className'] . '</option>';
-                  }
+                $classQuery = "SELECT * FROM tblclass";
+                $classResult = $conn->query($classQuery);
+                while ($classRow = $classResult->fetch_assoc()) {
+                  echo "<option value='" . $classRow['Id'] . "'>" . $classRow['className'] . "</option>";
                 }
                 ?>
               </select>
             </div>
             <div class="form-group">
-              <label for="classArmName">Class Arm Name</label>
+              <label for="classArmName">Subject Name:</label>
               <input type="text" class="form-control" id="classArmName" name="classArmName" required>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-              <?php if ($editId !== ""): ?>
-                <!-- Display "Update" button if we are in Edit mode -->
-                <button type="submit" class="btn btn-primary" name="update">Update Class Arm</button>
-              <?php else: ?>
-                <!-- Display "Save" button if we are in Add mode -->
-                <button type="submit" class="btn btn-primary" name="saveClassArm">Save Class Arm</button>
-              <?php endif; ?>
-            </div>
-          </form>
-        </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" name="save">Save</button>
+            <button type="submit" class="btn btn-primary" name="update">Update</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+
   <!-- Footer -->
   <?php include "Includes/footer.php"; ?>
 
@@ -213,51 +217,26 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
     $(document).ready(function () {
       $('#dataTable').DataTable(); // ID From dataTable 
       $('#dataTableHover').DataTable(); // ID From dataTable with Hover
-    });
-  </script>
 
-  <script>
-    // JavaScript code to handle the modal for adding/editing a class arm
-    $(document).ready(function () {
-      // Function to open the modal for adding a class arm
-      function openAddClassArmModal() {
-        $("#addClassArmModalLabel").text("Add Class Arm");
-        $("#editClassArmId").val(""); // Clear the edit ID
-        $("#classId").val("");
-        $("#classArmName").val("");
-        $("#classArmForm").attr("action", ""); // Set action to empty for adding
-        $("#saveClassArmBtn").show();
-        $("#updateClassArmBtn").hide();
-      }
+      // Handle Edit button click
+      $('#addClassSubjectModal').on('show.bs.modal', function (e) {
+        var link = e.relatedTarget;
+        var Id = link.getAttribute('data-id');
+        var classId = link.getAttribute('data-classid');
+        var classArmName = link.getAttribute('data-classarmname');
 
-      // Function to open the modal for editing a class arm
-      function openEditClassArmModal(id, classId, classArmName) {
-        $("#addClassArmModalLabel").text("Edit Class Arm");
-        $("#editClassArmId").val(id);
-        $("#classId").val(classId);
-        $("#classArmName").val(classArmName);
-        $("#classArmForm").attr("action", "?Id=" + id + "&action=edit"); // Set action for editing
-        $("#saveClassArmBtn").hide();
-        $("#updateClassArmBtn").show();
-      }
+        // Update the modal's form action based on whether it's an edit or add
+        var form = $(this).find('form');
+        var updateButton = form.find('[name="update"]');
+        var saveButton = form.find('[name="save"]');
+        form.attr('action', (Id ? 'createClassArms.php?action=edit&Id=' + Id : 'createClassArms.php'));
+        updateButton.toggle(Id !== null);
+        saveButton.toggle(Id === null);
 
-      // Open the modal when the "Add Class Arm" button is clicked
-      $("#addClassArmBtn").on("click", function () {
-        openAddClassArmModal();
-      });
-
-      // Open the modal when the "Edit" button is clicked
-      $(".edit-btn").on("click", function (e) {
-        e.preventDefault();
-        var id = $(this).attr("data-id");
-        var classId = $(this).attr("data-class-id");
-        var classArmName = $(this).attr("data-class-arm-name");
-        openEditClassArmModal(id, classId, classArmName);
-      });
-
-      // Clear the modal content when it's closed
-      $('#addClassArmModal').on('hidden.bs.modal', function (e) {
-        openAddClassArmModal();
+        // Populate the form fields with data for editing
+        form.find('#modalId').val(Id);
+        form.find('#classId').val(classId);
+        form.find('#classArmName').val(classArmName);
       });
     });
   </script>
