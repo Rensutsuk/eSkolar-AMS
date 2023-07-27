@@ -1816,12 +1816,12 @@ footer.sticky-footer {
     -ms-flex-negative: 0;
     flex-shrink: 0;
     -webkit-box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
-    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15)
+    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
 }
 
 footer.sticky-footer .copyright {
     line-height: 1;
-    font-size: .8rem
+    font-size: .8rem;
 }
 
 footer.sticky-footer .copyright a {

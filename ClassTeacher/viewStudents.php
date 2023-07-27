@@ -139,7 +139,6 @@ $rrw = $rs->fetch_assoc();
         </div>
         <!-- Footer -->
         <?php include "Includes/footer.php"; ?>
-        <!-- Footer -->
       </div>
     </div>
 

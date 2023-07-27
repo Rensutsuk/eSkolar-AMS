@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 23, 2023 at 06:33 AM
+-- Generation Time: Jul 26, 2023 at 06:53 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -63,20 +63,18 @@ CREATE TABLE `tblattendance` (
 --
 
 INSERT INTO `tblattendance` (`Id`, `admissionNo`, `classId`, `classArmId`, `sessionTermId`, `status`, `dateTimeTaken`) VALUES
-(1, 'AMS-2023-1234', '1', '1', '1', '1', '2023-07-20'),
-(2, 'AMS-2023-2468', '1', '1', '1', '1', '2023-07-20'),
-(3, 'AMS-2023-1111', '1', '1', '1', '1', '2023-07-20'),
-(4, 'AMS-2023-4444', '1', '1', '1', '1', '2023-07-20'),
-(5, 'AMS-2023-7777', '1', '1', '1', '1', '2023-07-20'),
-(6, 'AMS-2023-1010', '1', '1', '1', '0', '2023-07-20'),
-(7, 'AMS-2023-4040', '1', '1', '1', '0', '2023-07-20'),
-(8, 'AMS-2023-1234', '1', '1', '4', '1', '2023-07-21'),
-(9, 'AMS-2023-2468', '1', '1', '4', '1', '2023-07-21'),
-(10, 'AMS-2023-1111', '1', '1', '4', '1', '2023-07-21'),
-(11, 'AMS-2023-4444', '1', '1', '4', '1', '2023-07-21'),
-(12, 'AMS-2023-7777', '1', '1', '4', '1', '2023-07-21'),
-(13, 'AMS-2023-1010', '1', '1', '4', '0', '2023-07-21'),
-(14, 'AMS-2023-4040', '1', '1', '4', '0', '2023-07-21');
+(38, 'AMS-2023-7942', '1', '1', '4', '0', '2023-07-25'),
+(37, 'AMS-2023-5736', '1', '1', '4', '0', '2023-07-25'),
+(36, 'AMS-2023-8553', '1', '1', '4', '0', '2023-07-25'),
+(35, 'AMS-2023-8464', '1', '1', '4', '0', '2023-07-25'),
+(34, 'AMS-2023-2540', '1', '1', '4', '1', '2023-07-25'),
+(33, 'AMS-2023-2770', '1', '1', '4', '1', '2023-07-25'),
+(32, 'AMS-2023-6261', '1', '1', '4', '1', '2023-07-25'),
+(31, 'AMS-2023-4006', '1', '1', '4', '1', '2023-07-25'),
+(30, 'AMS-2023-5441', '1', '1', '4', '1', '2023-07-25'),
+(29, 'AMS-2023-1313', '1', '1', '4', '1', '2023-07-25'),
+(28, 'AMS-2023-4059', '1', '1', '4', '1', '2023-07-25'),
+(27, 'AMS-2023-9576', '1', '1', '4', '1', '2023-07-25');
 
 -- --------------------------------------------------------
 
@@ -201,43 +199,42 @@ CREATE TABLE `tblstudents` (
 --
 
 INSERT INTO `tblstudents` (`Id`, `firstName`, `lastName`, `otherName`, `admissionNumber`, `password`, `classId`, `classArmId`, `dateCreated`) VALUES
-(1, 'Juan', 'Dela Cruz', 'Garcia', 'AMS-2023-1234', '32250170a0dca92d53ec9624f336ca24', '1', '1', '2023-07-20'),
-(2, 'Maria', 'Santos', 'Reyes', 'AMS-2023-5678', '5f4dcc3b5aa765d61d8327deb882cf99', '2', '1', '2023-07-20'),
-(3, 'Pedro', 'Gomez', 'Lopez', 'AMS-2023-9876', '5d7845ac6ee7cfffafc5fe5f35cf666d', '3', '2', '2023-07-20'),
-(4, 'Ana', 'Lim', 'Castillo', 'AMS-2023-4321', '3fc0a7acf087f549ac2b266baf94b8b1', '4', '2', '2023-07-20'),
-(5, 'Maria', 'Gonzales', 'Santos', 'AMS-2023-2468', '32250170a0dca92d53ec9624f336ca24', '1', '1', '2023-07-21'),
-(6, 'John', 'Smith', 'Doe', 'AMS-2023-1357', '5f4dcc3b5aa765d61d8327deb882cf99', '2', '1', '2023-07-21'),
-(7, 'Jane', 'Lee', 'Johnson', 'AMS-2023-9876', '5d7845ac6ee7cfffafc5fe5f35cf666d', '3', '2', '2023-07-21'),
-(8, 'Michael', 'Garcia', 'Lopez', 'AMS-2023-1111', '56cf01f6edfe9598b5e23407fe290990', '1', '1', '2023-07-22'),
-(9, 'Sarah', 'Rodriguez', 'Lim', 'AMS-2023-2222', 'ec26202651ed221cf8f993668c459d46', '2', '1', '2023-07-22'),
-(10, 'David', 'Tan', 'Gomez', 'AMS-2023-3333', '55fc5b709962876903785fd64a6961e5', '3', '2', '2023-07-22'),
-(11, 'James', 'Chua', 'Sy', 'AMS-2023-4444', '9ba36afc4e560bf811caefc0c7fddddf', '1', '1', '2023-07-22'),
-(12, 'Linda', 'Wong', 'Chen', 'AMS-2023-5555', '7d95d1d22485f5ac341d06bbfea91e9e', '2', '1', '2023-07-22'),
-(13, 'Alex', 'Lopez', 'Garcia', 'AMS-2023-7777', 'b75bd008d5fecb1f50cf026532e8ae67', '1', '1', '2023-07-23'),
-(14, 'Emily', 'Chen', 'Tan', 'AMS-2023-6666', '29e1448ae02b6fd112fcf3618e1be9f5', '2', '1', '2023-07-23'),
-(15, 'Daniel', 'Sy', 'Wang', 'AMS-2023-5555', 'b5ea8985533defbf1d08d5ed2ac8fe9b', '3', '2', '2023-07-23'),
-(16, 'Sophia', 'Lim', 'Gomez', 'AMS-2023-4444', '79fc98c9ebcefe5acf01bc9802b4af1d', '1', '1', '2023-07-23'),
-(17, 'Ethan', 'Gonzales', 'Santos', 'AMS-2023-3333', '13b55d41e2cf32424e9faa1a52cdb67a', '2', '1', '2023-07-23'),
-(18, 'Olivia', 'Smith', 'Doe', 'AMS-2023-2222', '5a6fdf1ec2d9b64595817887becd660d', '3', '2', '2023-07-23'),
-(19, 'William', 'Lee', 'Johnson', 'AMS-2023-1111', '8a31fc89653c9f20d371bec97430d477', '1', '1', '2023-07-23'),
-(20, 'Ava', 'Rodriguez', 'Lim', 'AMS-2023-9999', 'e5ab29eee37a2cb280c09963e3c4ab4b', '2', '1', '2023-07-23'),
-(21, 'James', 'Tan', 'Gomez', 'AMS-2023-8888', '9ba36afc4e560bf811caefc0c7fddddf', '3', '2', '2023-07-23'),
-(22, 'Isabella', 'Wong', 'Chen', 'AMS-2023-7777', '2f7063936730e384c558074c9a71d2a6', '1', '1', '2023-07-23'),
-(23, 'Alexander', 'Chua', 'Sy', 'AMS-2023-6666', 'aefc64cf49588070315fbb08bd0c8ee2', '2', '1', '2023-07-23'),
-(24, 'Charlotte', 'Gomez', 'Lopez', 'AMS-2023-5555', '25d496178f31e4dd190199b8388cdfad', '3', '2', '2023-07-23'),
-(25, 'Liam', 'Garcia', 'Lopez', 'AMS-2023-4444', '13eed07d404b6a6369f0d87db38d9b7e', '1', '1', '2023-07-24'),
-(26, 'Emma', 'Santos', 'Reyes', 'AMS-2023-5555', '1f050242921954f2c734eec74ce2ecb6', '2', '1', '2023-07-24'),
-(27, 'Noah', 'Gomez', 'Castillo', 'AMS-2023-6666', '54b1504207c9de5f7b2fd9c67d540e86', '3', '2', '2023-07-24'),
-(28, 'Olivia', 'Lim', 'Santos', 'AMS-2023-7777', '5a6fdf1ec2d9b64595817887becd660d', '1', '1', '2023-07-24'),
-(29, 'Aiden', 'Smith', 'Doe', 'AMS-2023-8888', 'd69909f68d218f2dd49d2fb2d30ca85a', '2', '1', '2023-07-24'),
-(30, 'Sophia', 'Lee', 'Johnson', 'AMS-2023-9999', '79fc98c9ebcefe5acf01bc9802b4af1d', '3', '2', '2023-07-24'),
-(31, 'Lucas', 'Rodriguez', 'Lim', 'AMS-2023-1010', '1308dfed71297a652cc42a390e211489', '1', '1', '2023-07-24'),
-(32, 'Mia', 'Tan', 'Gomez', 'AMS-2023-2020', 'e154e212f88557130a2fe3de73299ad9', '2', '1', '2023-07-24'),
-(33, 'Liam', 'Wong', 'Chen', 'AMS-2023-3030', '13eed07d404b6a6369f0d87db38d9b7e', '3', '2', '2023-07-24'),
-(34, 'Ella', 'Chua', 'Sy', 'AMS-2023-4040', 'efadcf6a697bcc011b573984dcdd3740', '1', '1', '2023-07-24'),
-(35, 'Avery', 'Gomez', 'Lopez', 'AMS-2023-5050', '2897195ae55d55d38738d6253c2b49ab', '2', '1', '2023-07-24'),
-(36, 'Arabella', 'Smith', 'Doe', 'AMS-2023-6060', '6179c8c8fa04b40f6adc7b390adb0176', '3', '2', '2023-07-24'),
-(50, 'JOHN RENZO', 'ERFELO', 'ESPIN', 'AMS-2023-6955', '', '3', '3', '2023-07-20');
+(1, 'Juan', 'Dela Cruz', 'Garcia', 'AMS-2023-9576', '32250170a0dca92d53ec9624f336ca24', '1', '1', '2023-07-20'),
+(2, 'Maria', 'Santos', 'Reyes', 'AMS-2023-8275', '5f4dcc3b5aa765d61d8327deb882cf99', '2', '1', '2023-07-20'),
+(3, 'Pedro', 'Gomez', 'Lopez', 'AMS-2023-2644', '5d7845ac6ee7cfffafc5fe5f35cf666d', '3', '2', '2023-07-20'),
+(4, 'Ana', 'Lim', 'Castillo', 'AMS-2023-8398', '3fc0a7acf087f549ac2b266baf94b8b1', '4', '2', '2023-07-20'),
+(5, 'Maria', 'Gonzales', 'Santos', 'AMS-2023-4059', '32250170a0dca92d53ec9624f336ca24', '1', '1', '2023-07-21'),
+(6, 'John', 'Smith', 'Doe', 'AMS-2023-5100', '5f4dcc3b5aa765d61d8327deb882cf99', '2', '1', '2023-07-21'),
+(7, 'Jane', 'Lee', 'Johnson', 'AMS-2023-3322', '5d7845ac6ee7cfffafc5fe5f35cf666d', '3', '2', '2023-07-21'),
+(8, 'Michael', 'Garcia', 'Lopez', 'AMS-2023-1313', '56cf01f6edfe9598b5e23407fe290990', '1', '1', '2023-07-22'),
+(9, 'Sarah', 'Rodriguez', 'Lim', 'AMS-2023-6597', 'ec26202651ed221cf8f993668c459d46', '2', '1', '2023-07-22'),
+(10, 'David', 'Tan', 'Gomez', 'AMS-2023-9046', '55fc5b709962876903785fd64a6961e5', '3', '2', '2023-07-22'),
+(11, 'James', 'Chua', 'Sy', 'AMS-2023-5441', '9ba36afc4e560bf811caefc0c7fddddf', '1', '1', '2023-07-22'),
+(12, 'Linda', 'Wong', 'Chen', 'AMS-2023-65', '7d95d1d22485f5ac341d06bbfea91e9e', '2', '1', '2023-07-22'),
+(13, 'Alex', 'Lopez', 'Garcia', 'AMS-2023-4006', 'b75bd008d5fecb1f50cf026532e8ae67', '1', '1', '2023-07-23'),
+(14, 'Emily', 'Chen', 'Tan', 'AMS-2023-9834', '29e1448ae02b6fd112fcf3618e1be9f5', '2', '1', '2023-07-23'),
+(15, 'Daniel', 'Sy', 'Wang', 'AMS-2023-7153', 'b5ea8985533defbf1d08d5ed2ac8fe9b', '3', '2', '2023-07-23'),
+(16, 'Sophia', 'Lim', 'Gomez', 'AMS-2023-6261', '79fc98c9ebcefe5acf01bc9802b4af1d', '1', '1', '2023-07-23'),
+(17, 'Ethan', 'Gonzales', 'Santos', 'AMS-2023-9849', '13b55d41e2cf32424e9faa1a52cdb67a', '2', '1', '2023-07-23'),
+(18, 'Olivia', 'Smith', 'Doe', 'AMS-2023-463', '5a6fdf1ec2d9b64595817887becd660d', '3', '2', '2023-07-23'),
+(19, 'William', 'Lee', 'Johnson', 'AMS-2023-2770', '8a31fc89653c9f20d371bec97430d477', '1', '1', '2023-07-23'),
+(20, 'Ava', 'Rodriguez', 'Lim', 'AMS-2023-2458', 'e5ab29eee37a2cb280c09963e3c4ab4b', '2', '1', '2023-07-23'),
+(21, 'James', 'Tan', 'Gomez', 'AMS-2023-3983', '9ba36afc4e560bf811caefc0c7fddddf', '3', '2', '2023-07-23'),
+(22, 'Isabella', 'Wong', 'Chen', 'AMS-2023-2540', '2f7063936730e384c558074c9a71d2a6', '1', '1', '2023-07-23'),
+(23, 'Alexander', 'Chua', 'Sy', 'AMS-2023-753', 'aefc64cf49588070315fbb08bd0c8ee2', '2', '1', '2023-07-23'),
+(24, 'Charlotte', 'Gomez', 'Lopez', 'AMS-2023-6144', '25d496178f31e4dd190199b8388cdfad', '3', '2', '2023-07-23'),
+(25, 'Liam', 'Garcia', 'Lopez', 'AMS-2023-8464', '13eed07d404b6a6369f0d87db38d9b7e', '1', '1', '2023-07-24'),
+(26, 'Emma', 'Santos', 'Reyes', 'AMS-2023-3887', '1f050242921954f2c734eec74ce2ecb6', '2', '1', '2023-07-24'),
+(27, 'Noah', 'Gomez', 'Castillo', 'AMS-2023-4043', '54b1504207c9de5f7b2fd9c67d540e86', '3', '2', '2023-07-24'),
+(28, 'Olivia', 'Lim', 'Santos', 'AMS-2023-8553', '5a6fdf1ec2d9b64595817887becd660d', '1', '1', '2023-07-24'),
+(29, 'Aiden', 'Smith', 'Doe', 'AMS-2023-638', 'd69909f68d218f2dd49d2fb2d30ca85a', '2', '1', '2023-07-24'),
+(30, 'Sophia', 'Lee', 'Johnson', 'AMS-2023-7530', '79fc98c9ebcefe5acf01bc9802b4af1d', '3', '2', '2023-07-24'),
+(31, 'Lucas', 'Rodriguez', 'Lim', 'AMS-2023-5736', '1308dfed71297a652cc42a390e211489', '1', '1', '2023-07-24'),
+(32, 'Mia', 'Tan', 'Gomez', 'AMS-2023-6090', 'e154e212f88557130a2fe3de73299ad9', '2', '1', '2023-07-24'),
+(33, 'Liam', 'Wong', 'Chen', 'AMS-2023-3242', '13eed07d404b6a6369f0d87db38d9b7e', '3', '2', '2023-07-24'),
+(34, 'Ella', 'Chua', 'Sy', 'AMS-2023-7942', 'efadcf6a697bcc011b573984dcdd3740', '1', '1', '2023-07-24'),
+(35, 'Avery', 'Gomez', 'Lopez', 'AMS-2023-9982', '2897195ae55d55d38738d6253c2b49ab', '2', '1', '2023-07-24'),
+(36, 'Arabella', 'Smith', 'Doe', 'AMS-2023-6087', '6179c8c8fa04b40f6adc7b390adb0176', '3', '2', '2023-07-24');
 
 -- --------------------------------------------------------
 
@@ -325,7 +322,7 @@ ALTER TABLE `tbladmin`
 -- AUTO_INCREMENT for table `tblattendance`
 --
 ALTER TABLE `tblattendance`
-  MODIFY `Id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `Id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `tblclass`
@@ -355,7 +352,7 @@ ALTER TABLE `tblsessionterm`
 -- AUTO_INCREMENT for table `tblstudents`
 --
 ALTER TABLE `tblstudents`
-  MODIFY `Id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `Id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `tblterm`
